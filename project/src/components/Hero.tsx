@@ -278,56 +278,87 @@ const Hero: React.FC<HeroProps> = ({ setCurrentPage }) => {
     return imageSet.desktop; // Default for SSR
   };
 
-  // Variants for motion animations - changed to horizontal sliding
+  // Variants for motion animations - enhanced with 3D effects and smoother physics
   const slideVariants = {
     initial: (direction: number) => ({
       x: direction > 0 ? '100%' : '-100%',
-      opacity: 0.5,
-      scale: 0.95,
+      opacity: 0.2,
+      scale: 0.9,
+      rotateY: direction > 0 ? '7deg' : '-7deg',
+      z: -100,
     }),
     enter: {
       x: 0,
       opacity: 1,
       scale: 1,
+      rotateY: '0deg',
+      z: 0,
       transition: {
-        x: { type: "spring", stiffness: 300, damping: 30 },
-        opacity: { duration: 0.5 },
-        scale: { duration: 0.5 }
+        x: { type: "spring", stiffness: 400, damping: 25, mass: 1 },
+        opacity: { duration: 0.4 },
+        scale: { duration: 0.4, ease: "easeOut" },
+        rotateY: { duration: 0.5, ease: "easeOut" },
+        z: { duration: 0.5, ease: "easeOut" }
       }
     },
     exit: (direction: number) => ({
       x: direction < 0 ? '100%' : '-100%',
-      opacity: 0.5,
-      scale: 0.95,
+      opacity: 0.2,
+      scale: 0.9,
+      rotateY: direction < 0 ? '7deg' : '-7deg',
+      z: -100,
       transition: {
-        x: { type: "spring", stiffness: 300, damping: 30 },
-        opacity: { duration: 0.5 },
-        scale: { duration: 0.5 }
+        x: { type: "spring", stiffness: 400, damping: 25, mass: 1 },
+        opacity: { duration: 0.4 },
+        scale: { duration: 0.4 },
+        rotateY: { duration: 0.5 },
+        z: { duration: 0.5 }
       }
     })
   };
 
+  // Enhanced content animation with smoother coordination
   const contentVariants = {
     initial: (direction: number) => ({
       opacity: 0,
-      x: direction > 0 ? 50 : -50,
+      x: direction > 0 ? 80 : -80,
+      scale: 0.95,
     }),
     enter: {
       opacity: 1,
       x: 0,
+      scale: 1,
       transition: {
         duration: 0.5,
-        ease: [0.19, 1.0, 0.22, 1.0],
-        staggerChildren: 0.1
+        ease: [0.25, 1.0, 0.5, 1.0],
+        staggerChildren: 0.08,
+        delayChildren: 0.1
       }
     },
     exit: (direction: number) => ({
       opacity: 0,
-      x: direction < 0 ? 50 : -50,
+      x: direction < 0 ? 80 : -80,
+      scale: 0.95,
       transition: {
-        duration: 0.3
+        duration: 0.3,
+        ease: [0.25, 0.5, 0.5, 1.0]
       }
     })
+  };
+
+  // Child animation for staggered content elements
+  const childVariants = {
+    initial: { opacity: 0, y: 10 },
+    enter: { 
+      opacity: 1, 
+      y: 0,
+      transition: { duration: 0.5 }
+    },
+    exit: { 
+      opacity: 0, 
+      y: -10,
+      transition: { duration: 0.3 } 
+    }
   };
 
   // Add smooth scroll function for the down arrow
@@ -378,8 +409,8 @@ const Hero: React.FC<HeroProps> = ({ setCurrentPage }) => {
         }
       `}} />
       
-      {/* Slide images */}
-      <div ref={slidesRef} className="absolute inset-0 overflow-hidden">
+      {/* Slide images with 3D perspective */}
+      <div ref={slidesRef} className="absolute inset-0 overflow-hidden" style={{ perspective: '1200px' }}>
         <AnimatePresence initial={false} mode="sync" custom={direction}>
           <motion.div
             key={`slide-${currentSlide}`}
@@ -389,6 +420,7 @@ const Hero: React.FC<HeroProps> = ({ setCurrentPage }) => {
             animate="enter"
             exit="exit"
             className="absolute inset-0"
+            style={{ transformStyle: 'preserve-3d' }}
           >
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-black/20 z-10"></div>
             <img
@@ -403,7 +435,7 @@ const Hero: React.FC<HeroProps> = ({ setCurrentPage }) => {
         </AnimatePresence>
       </div>
 
-      {/* Slide content - improved with dynamic direction */}
+      {/* Slide content with staggered animations */}
       <div className="absolute inset-0 z-20 flex flex-col justify-center max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <AnimatePresence mode="wait" custom={direction}>
           <motion.div 
@@ -416,16 +448,19 @@ const Hero: React.FC<HeroProps> = ({ setCurrentPage }) => {
             exit="exit"
           >
             <motion.h1
+              variants={childVariants}
               className="text-white text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-light tracking-tight mb-3 sm:mb-4 max-w-3xl leading-tight"
             >
               {slideTitles[currentSlide]}
             </motion.h1>
             <motion.p
+              variants={childVariants}
               className="text-white/90 text-base sm:text-lg md:text-xl font-light mb-8 max-w-xl leading-relaxed"
             >
               {slideSubtitles[currentSlide]}
             </motion.p>
             <motion.div
+              variants={childVariants}
               className="flex flex-col sm:flex-row gap-4"
             >
               <motion.button
