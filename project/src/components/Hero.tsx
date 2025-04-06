@@ -407,26 +407,26 @@ const Hero: React.FC<HeroProps> = ({ setCurrentPage }) => {
               key={`dot-${index}`}
               className={`rounded-full transition-all duration-300 mb-1 mx-1 flex-shrink-0 ${
                 currentSlide === index 
-                  ? "h-2.5 w-2.5 sm:h-3 sm:w-3 bg-white/90" 
-                  : "h-1.5 w-1.5 sm:h-2 sm:w-2 bg-white/30 hover:bg-white/50"
+                  ? "h-2.5 w-2.5 sm:h-3 sm:w-3 bg-white/50 sm:bg-white/70" 
+                  : "h-1.5 w-1.5 sm:h-2 sm:w-2 bg-white/20 hover:bg-white/30"
               }`}
               onClick={() => setCurrentSlide(index)}
               aria-label={`Go to slide ${index + 1}`}
             />
           ))}
           {isTouchDevice && slideImages.length > 5 && (
-            <span className="text-white/40 text-xs mx-1">•••</span>
+            <span className="text-white/20 text-xs mx-1">•••</span>
           )}
         </div>
         
-        {/* Navigation buttons - increased size for touch friendliness */}
+        {/* Navigation buttons - increased size for touch friendliness and more transparent */}
         <div className="flex space-x-2 sm:space-x-4">
           <motion.button
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             onClick={handlePrev}
-            className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-black/20 backdrop-blur-sm border border-white/20 
-                     flex items-center justify-center text-white hover:bg-black/30 transition-colors"
+            className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-black/10 backdrop-blur-sm border border-white/10 
+                     flex items-center justify-center text-white/70 hover:bg-black/20 transition-colors"
             aria-label="Previous slide"
           >
             <ChevronLeft className="w-4 h-4 sm:w-6 sm:h-6" />
@@ -435,8 +435,8 @@ const Hero: React.FC<HeroProps> = ({ setCurrentPage }) => {
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             onClick={handleNext}
-            className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-black/20 backdrop-blur-sm border border-white/20 
-                     flex items-center justify-center text-white hover:bg-black/30 transition-colors"
+            className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-black/10 backdrop-blur-sm border border-white/10 
+                     flex items-center justify-center text-white/70 hover:bg-black/20 transition-colors"
             aria-label="Next slide"
           >
             <ChevronRight className="w-4 h-4 sm:w-6 sm:h-6" />
@@ -444,17 +444,17 @@ const Hero: React.FC<HeroProps> = ({ setCurrentPage }) => {
         </div>
       </div>
 
-      {/* Scroll down button with animation and improved tap target */}
+      {/* Scroll down button with animation and improved tap target - more transparent */}
       <motion.button
         initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
+        animate={{ opacity: 0.5, y: 0 }}
         transition={{ delay: 1, duration: 0.8 }}
-        whileHover={{ y: 5 }}
+        whileHover={{ opacity: 0.8, y: 5 }}
         onClick={scrollToProjects}
-        className="absolute bottom-8 sm:bottom-10 left-1/2 transform -translate-x-1/2 bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white rounded-full p-3 sm:p-4 shadow-lg z-20 min-h-[50px] min-w-[50px] flex items-center justify-center"
+        className="absolute bottom-8 sm:bottom-10 left-1/2 transform -translate-x-1/2 bg-black/10 backdrop-blur-sm hover:bg-black/20 text-white/70 rounded-full p-3 sm:p-4 shadow-lg z-20 min-h-[50px] min-w-[50px] flex items-center justify-center"
         aria-label="Scroll down to browse properties"
       >
-        <ChevronDown size={24} strokeWidth={2.5} className="animate-bounce" />
+        <ChevronDown size={24} strokeWidth={2} className="animate-bounce" />
       </motion.button>
 
       {/* Add global styles for hiding scrollbars while preserving functionality */}
