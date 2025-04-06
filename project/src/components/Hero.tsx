@@ -288,16 +288,22 @@ const Hero: React.FC<HeroProps> = ({ setCurrentPage }) => {
       // Smooth scroll to the projects section if it exists
       projectsSection.scrollIntoView({ behavior: 'smooth' });
     } else {
-      // Otherwise navigate to projects page
-      setCurrentPage('projects');
-      
-      // Add a small delay and then scroll down a bit
-      setTimeout(() => {
-        window.scrollTo({
-          top: window.innerHeight * 0.9,
-          behavior: 'smooth'
-        });
-      }, 100);
+      // Otherwise look for the properties section
+      const propertiesSection = document.getElementById('properties');
+      if (propertiesSection) {
+        propertiesSection.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        // Last resort - navigate to projects page
+        setCurrentPage('projects');
+        
+        // Add a small delay and then scroll down a bit
+        setTimeout(() => {
+          window.scrollTo({
+            top: window.innerHeight * 0.9,
+            behavior: 'smooth'
+          });
+        }, 100);
+      }
     }
   };
 
@@ -444,7 +450,22 @@ const Hero: React.FC<HeroProps> = ({ setCurrentPage }) => {
         </div>
       </div>
 
-      {/* Scroll down button with animation and improved tap target - more transparent and hidden on small mobile */}
+      {/* Scroll down button - separate for mobile and desktop */}
+      {/* Mobile version - simplified and repositioned */}
+      <motion.button
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 0.6, y: 0 }}
+        transition={{ delay: 1, duration: 0.8 }}
+        whileHover={{ opacity: 0.9 }}
+        whileTap={{ scale: 0.95 }}
+        onClick={scrollToProjects}
+        className="sm:hidden absolute bottom-4 left-1/2 transform -translate-x-1/2 z-40 bg-black/30 text-white/80 rounded-full p-2 shadow-lg flex items-center justify-center w-9 h-9"
+        aria-label="Scroll to properties"
+      >
+        <ChevronDown size={18} strokeWidth={2.5} className="animate-bounce" />
+      </motion.button>
+      
+      {/* Desktop version */}
       <motion.button
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 0.5, y: 0 }}
