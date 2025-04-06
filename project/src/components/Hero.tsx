@@ -26,112 +26,112 @@ const Hero: React.FC<HeroProps> = ({ setCurrentPage }) => {
   // Add state for detecting touch devices
   const [isTouchDevice, setIsTouchDevice] = useState(false);
   
-  // Responsive image URLs for different screen sizes
+  // Responsive image URLs for different screen sizes with maximum quality
   const slideImages = [
     {
-      mobile: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=480&auto=format&fit=crop&q=80",
-      tablet: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&auto=format&fit=crop&q=80",
-      desktop: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1920&auto=format&fit=crop&q=80"
+      mobile: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=480&auto=format&fit=crop&q=100",
+      tablet: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&auto=format&fit=crop&q=100",
+      desktop: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1920&auto=format&fit=crop&q=100"
     },
     {
-      mobile: "https://images.unsplash.com/photo-1582407947304-fd86f028f716?w=480&auto=format&fit=crop&q=80",
-      tablet: "https://images.unsplash.com/photo-1582407947304-fd86f028f716?w=800&auto=format&fit=crop&q=80",
-      desktop: "https://images.unsplash.com/photo-1582407947304-fd86f028f716?w=1920&auto=format&fit=crop&q=80"
+      mobile: "https://images.unsplash.com/photo-1582407947304-fd86f028f716?w=480&auto=format&fit=crop&q=100",
+      tablet: "https://images.unsplash.com/photo-1582407947304-fd86f028f716?w=800&auto=format&fit=crop&q=100",
+      desktop: "https://images.unsplash.com/photo-1582407947304-fd86f028f716?w=1920&auto=format&fit=crop&q=100"
     },
     {
-      mobile: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=480&auto=format&fit=crop&q=80",
-      tablet: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&auto=format&fit=crop&q=80",
-      desktop: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1920&auto=format&fit=crop&q=80"
+      mobile: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=480&auto=format&fit=crop&q=100",
+      tablet: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&auto=format&fit=crop&q=100",
+      desktop: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1920&auto=format&fit=crop&q=100"
     },
     {
-      mobile: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=480&auto=format&fit=crop&q=80",
-      tablet: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&auto=format&fit=crop&q=80",
-      desktop: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1920&auto=format&fit=crop&q=80"
+      mobile: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=480&auto=format&fit=crop&q=100",
+      tablet: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&auto=format&fit=crop&q=100",
+      desktop: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1920&auto=format&fit=crop&q=100"
     },
     {
-      mobile: "https://images.unsplash.com/photo-1613977257365-aaae5a9817ff?w=480&auto=format&fit=crop&q=80",
-      tablet: "https://images.unsplash.com/photo-1613977257365-aaae5a9817ff?w=800&auto=format&fit=crop&q=80",
-      desktop: "https://images.unsplash.com/photo-1613977257365-aaae5a9817ff?w=1920&auto=format&fit=crop&q=80"
+      mobile: "https://images.unsplash.com/photo-1613977257365-aaae5a9817ff?w=480&auto=format&fit=crop&q=100",
+      tablet: "https://images.unsplash.com/photo-1613977257365-aaae5a9817ff?w=800&auto=format&fit=crop&q=100",
+      desktop: "https://images.unsplash.com/photo-1613977257365-aaae5a9817ff?w=1920&auto=format&fit=crop&q=100"
     },
     {
-      mobile: "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=480&auto=format&fit=crop&q=80",
-      tablet: "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=800&auto=format&fit=crop&q=80",
-      desktop: "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=1920&auto=format&fit=crop&q=80"
+      mobile: "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=480&auto=format&fit=crop&q=100",
+      tablet: "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=800&auto=format&fit=crop&q=100",
+      desktop: "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=1920&auto=format&fit=crop&q=100"
     },
     {
-      mobile: "https://images.unsplash.com/photo-1523217582562-09d0def993a6?w=480&auto=format&fit=crop&q=80",
-      tablet: "https://images.unsplash.com/photo-1523217582562-09d0def993a6?w=800&auto=format&fit=crop&q=80",
-      desktop: "https://images.unsplash.com/photo-1523217582562-09d0def993a6?w=1920&auto=format&fit=crop&q=80"
+      mobile: "https://images.unsplash.com/photo-1523217582562-09d0def993a6?w=480&auto=format&fit=crop&q=100",
+      tablet: "https://images.unsplash.com/photo-1523217582562-09d0def993a6?w=800&auto=format&fit=crop&q=100",
+      desktop: "https://images.unsplash.com/photo-1523217582562-09d0def993a6?w=1920&auto=format&fit=crop&q=100"
     },
     {
-      mobile: "https://images.unsplash.com/photo-1558036117-15d82a90b9b1?w=480&auto=format&fit=crop&q=80",
-      tablet: "https://images.unsplash.com/photo-1558036117-15d82a90b9b1?w=800&auto=format&fit=crop&q=80",
-      desktop: "https://images.unsplash.com/photo-1558036117-15d82a90b9b1?w=1920&auto=format&fit=crop&q=80"
+      mobile: "https://images.unsplash.com/photo-1558036117-15d82a90b9b1?w=480&auto=format&fit=crop&q=100",
+      tablet: "https://images.unsplash.com/photo-1558036117-15d82a90b9b1?w=800&auto=format&fit=crop&q=100",
+      desktop: "https://images.unsplash.com/photo-1558036117-15d82a90b9b1?w=1920&auto=format&fit=crop&q=100"
     },
     {
-      mobile: "https://images.unsplash.com/photo-1556955112-28cde3817b0a?w=480&auto=format&fit=crop&q=80",
-      tablet: "https://images.unsplash.com/photo-1556955112-28cde3817b0a?w=800&auto=format&fit=crop&q=80",
-      desktop: "https://images.unsplash.com/photo-1556955112-28cde3817b0a?w=1920&auto=format&fit=crop&q=80"
+      mobile: "https://images.unsplash.com/photo-1556955112-28cde3817b0a?w=480&auto=format&fit=crop&q=100",
+      tablet: "https://images.unsplash.com/photo-1556955112-28cde3817b0a?w=800&auto=format&fit=crop&q=100",
+      desktop: "https://images.unsplash.com/photo-1556955112-28cde3817b0a?w=1920&auto=format&fit=crop&q=100"
     },
     {
-      mobile: "https://images.unsplash.com/photo-1602941525421-8f8b81d3edbb?w=480&auto=format&fit=crop&q=80",
-      tablet: "https://images.unsplash.com/photo-1602941525421-8f8b81d3edbb?w=800&auto=format&fit=crop&q=80",
-      desktop: "https://images.unsplash.com/photo-1602941525421-8f8b81d3edbb?w=1920&auto=format&fit=crop&q=80"
+      mobile: "https://images.unsplash.com/photo-1602941525421-8f8b81d3edbb?w=480&auto=format&fit=crop&q=100",
+      tablet: "https://images.unsplash.com/photo-1602941525421-8f8b81d3edbb?w=800&auto=format&fit=crop&q=100",
+      desktop: "https://images.unsplash.com/photo-1602941525421-8f8b81d3edbb?w=1920&auto=format&fit=crop&q=100"
     },
     {
-      mobile: "https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?w=480&auto=format&fit=crop&q=80",
-      tablet: "https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?w=800&auto=format&fit=crop&q=80",
-      desktop: "https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?w=1920&auto=format&fit=crop&q=80"
+      mobile: "https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?w=480&auto=format&fit=crop&q=100",
+      tablet: "https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?w=800&auto=format&fit=crop&q=100",
+      desktop: "https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?w=1920&auto=format&fit=crop&q=100"
     },
     {
-      mobile: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=480&auto=format&fit=crop&q=80",
-      tablet: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&auto=format&fit=crop&q=80",
-      desktop: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1920&auto=format&fit=crop&q=80"
+      mobile: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=480&auto=format&fit=crop&q=100",
+      tablet: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&auto=format&fit=crop&q=100",
+      desktop: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1920&auto=format&fit=crop&q=100"
     },
     {
-      mobile: "https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=480&auto=format&fit=crop&q=80",
-      tablet: "https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=800&auto=format&fit=crop&q=80",
-      desktop: "https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=1920&auto=format&fit=crop&q=80"
+      mobile: "https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=480&auto=format&fit=crop&q=100",
+      tablet: "https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=800&auto=format&fit=crop&q=100",
+      desktop: "https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=1920&auto=format&fit=crop&q=100"
     },
     {
-      mobile: "https://images.unsplash.com/photo-1576941089067-2de3c901e126?w=480&auto=format&fit=crop&q=80",
-      tablet: "https://images.unsplash.com/photo-1576941089067-2de3c901e126?w=800&auto=format&fit=crop&q=80",
-      desktop: "https://images.unsplash.com/photo-1576941089067-2de3c901e126?w=1920&auto=format&fit=crop&q=80"
+      mobile: "https://images.unsplash.com/photo-1576941089067-2de3c901e126?w=480&auto=format&fit=crop&q=100",
+      tablet: "https://images.unsplash.com/photo-1576941089067-2de3c901e126?w=800&auto=format&fit=crop&q=100",
+      desktop: "https://images.unsplash.com/photo-1576941089067-2de3c901e126?w=1920&auto=format&fit=crop&q=100"
     },
     {
-      mobile: "https://images.unsplash.com/photo-1602343168117-bb8a12d7bc36?w=480&auto=format&fit=crop&q=80",
-      tablet: "https://images.unsplash.com/photo-1602343168117-bb8a12d7bc36?w=800&auto=format&fit=crop&q=80",
-      desktop: "https://images.unsplash.com/photo-1602343168117-bb8a12d7bc36?w=1920&auto=format&fit=crop&q=80"
+      mobile: "https://images.unsplash.com/photo-1602343168117-bb8a12d7bc36?w=480&auto=format&fit=crop&q=100",
+      tablet: "https://images.unsplash.com/photo-1602343168117-bb8a12d7bc36?w=800&auto=format&fit=crop&q=100",
+      desktop: "https://images.unsplash.com/photo-1602343168117-bb8a12d7bc36?w=1920&auto=format&fit=crop&q=100"
     },
     {
-      mobile: "https://images.unsplash.com/photo-1600566752355-35792bedcfea?w=480&auto=format&fit=crop&q=80",
-      tablet: "https://images.unsplash.com/photo-1600566752355-35792bedcfea?w=800&auto=format&fit=crop&q=80",
-      desktop: "https://images.unsplash.com/photo-1600566752355-35792bedcfea?w=1920&auto=format&fit=crop&q=80"
+      mobile: "https://images.unsplash.com/photo-1600566752355-35792bedcfea?w=480&auto=format&fit=crop&q=100",
+      tablet: "https://images.unsplash.com/photo-1600566752355-35792bedcfea?w=800&auto=format&fit=crop&q=100",
+      desktop: "https://images.unsplash.com/photo-1600566752355-35792bedcfea?w=1920&auto=format&fit=crop&q=100"
     },
     {
-      mobile: "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=480&auto=format&fit=crop&q=80",
-      tablet: "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=800&auto=format&fit=crop&q=80",
-      desktop: "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=1920&auto=format&fit=crop&q=80"
+      mobile: "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=480&auto=format&fit=crop&q=100",
+      tablet: "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=800&auto=format&fit=crop&q=100",
+      desktop: "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=1920&auto=format&fit=crop&q=100"
     },
     {
-      mobile: "https://images.unsplash.com/photo-1583608205776-bfd35f0d9f83?w=480&auto=format&fit=crop&q=80",
-      tablet: "https://images.unsplash.com/photo-1583608205776-bfd35f0d9f83?w=800&auto=format&fit=crop&q=80",
-      desktop: "https://images.unsplash.com/photo-1583608205776-bfd35f0d9f83?w=1920&auto=format&fit=crop&q=80"
+      mobile: "https://images.unsplash.com/photo-1583608205776-bfd35f0d9f83?w=480&auto=format&fit=crop&q=100",
+      tablet: "https://images.unsplash.com/photo-1583608205776-bfd35f0d9f83?w=800&auto=format&fit=crop&q=100",
+      desktop: "https://images.unsplash.com/photo-1583608205776-bfd35f0d9f83?w=1920&auto=format&fit=crop&q=100"
     },
     {
-      mobile: "https://images.unsplash.com/photo-1558979158-65a1eaa08691?w=480&auto=format&fit=crop&q=80",
-      tablet: "https://images.unsplash.com/photo-1558979158-65a1eaa08691?w=800&auto=format&fit=crop&q=80",
-      desktop: "https://images.unsplash.com/photo-1558979158-65a1eaa08691?w=1920&auto=format&fit=crop&q=80"
+      mobile: "https://images.unsplash.com/photo-1558979158-65a1eaa08691?w=480&auto=format&fit=crop&q=100",
+      tablet: "https://images.unsplash.com/photo-1558979158-65a1eaa08691?w=800&auto=format&fit=crop&q=100",
+      desktop: "https://images.unsplash.com/photo-1558979158-65a1eaa08691?w=1920&auto=format&fit=crop&q=100"
     },
     {
-      mobile: "https://images.unsplash.com/photo-1598228723793-52759bba239c?w=480&auto=format&fit=crop&q=80",
-      tablet: "https://images.unsplash.com/photo-1598228723793-52759bba239c?w=800&auto=format&fit=crop&q=80",
-      desktop: "https://images.unsplash.com/photo-1598228723793-52759bba239c?w=1920&auto=format&fit=crop&q=80"
+      mobile: "https://images.unsplash.com/photo-1598228723793-52759bba239c?w=480&auto=format&fit=crop&q=100",
+      tablet: "https://images.unsplash.com/photo-1598228723793-52759bba239c?w=800&auto=format&fit=crop&q=100",
+      desktop: "https://images.unsplash.com/photo-1598228723793-52759bba239c?w=1920&auto=format&fit=crop&q=100"
     },
     {
-      mobile: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=480&auto=format&fit=crop&q=80",
-      tablet: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&auto=format&fit=crop&q=80",
-      desktop: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=1920&auto=format&fit=crop&q=80"
+      mobile: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=480&auto=format&fit=crop&q=100",
+      tablet: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&auto=format&fit=crop&q=100",
+      desktop: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=1920&auto=format&fit=crop&q=100"
     }
   ];
 
