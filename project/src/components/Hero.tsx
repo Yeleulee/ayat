@@ -400,22 +400,22 @@ const Hero: React.FC<HeroProps> = ({ setCurrentPage }) => {
 
       {/* Slide navigation with dots for all images - Adjusted for better positioning */}
       <div className="absolute bottom-6 sm:bottom-12 left-0 right-0 z-30 flex justify-between items-center px-4 sm:px-6 md:px-12 lg:px-16 max-w-7xl mx-auto">
-        {/* Dot navigation - limited on mobile, scrollable container on desktop */}
+        {/* Dot navigation - mobile-optimized with fewer, more transparent dots */}
         <div className={`flex items-center nav-dots ${isTouchDevice ? 'overflow-x-auto pb-2 hide-scrollbar' : 'space-x-1 sm:space-x-2'}`}>
-          {slideImages.slice(0, isTouchDevice ? 10 : slideImages.length).map((_, index) => (
+          {slideImages.slice(0, isTouchDevice ? 5 : slideImages.length).map((_, index) => (
             <button
               key={`dot-${index}`}
               className={`rounded-full transition-all duration-300 mb-1 mx-1 flex-shrink-0 ${
                 currentSlide === index 
-                  ? "h-3 w-3 bg-white" 
-                  : "h-2 w-2 bg-white/50 hover:bg-white/70"
+                  ? "h-2.5 w-2.5 sm:h-3 sm:w-3 bg-white/90" 
+                  : "h-1.5 w-1.5 sm:h-2 sm:w-2 bg-white/30 hover:bg-white/50"
               }`}
               onClick={() => setCurrentSlide(index)}
               aria-label={`Go to slide ${index + 1}`}
             />
           ))}
-          {isTouchDevice && slideImages.length > 10 && (
-            <span className="text-white/70 text-xs mx-1">+{slideImages.length - 10}</span>
+          {isTouchDevice && slideImages.length > 5 && (
+            <span className="text-white/40 text-xs mx-1">•••</span>
           )}
         </div>
         
@@ -425,21 +425,21 @@ const Hero: React.FC<HeroProps> = ({ setCurrentPage }) => {
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             onClick={handlePrev}
-            className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-black/20 backdrop-blur-sm border border-white/20 
+            className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-black/20 backdrop-blur-sm border border-white/20 
                      flex items-center justify-center text-white hover:bg-black/30 transition-colors"
             aria-label="Previous slide"
           >
-            <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
+            <ChevronLeft className="w-4 h-4 sm:w-6 sm:h-6" />
           </motion.button>
           <motion.button
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             onClick={handleNext}
-            className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-black/20 backdrop-blur-sm border border-white/20 
+            className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-black/20 backdrop-blur-sm border border-white/20 
                      flex items-center justify-center text-white hover:bg-black/30 transition-colors"
             aria-label="Next slide"
           >
-            <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
+            <ChevronRight className="w-4 h-4 sm:w-6 sm:h-6" />
           </motion.button>
         </div>
       </div>
