@@ -363,18 +363,22 @@ const Hero: React.FC<HeroProps> = ({ setCurrentPage }) => {
       {/* Slide navigation with dots for all images - Adjusted for better positioning */}
       <div className="absolute bottom-6 sm:bottom-12 left-0 right-0 z-30 flex justify-between items-center px-4 sm:px-6 md:px-12 lg:px-16 max-w-7xl mx-auto">
         {/* Dot navigation - limited on mobile, scrollable container on desktop */}
-        <div className={`flex flex-wrap ${isTouchDevice ? 'max-w-[45vw] overflow-x-auto pb-2 gap-1 hide-scrollbar' : 'max-w-xs space-x-1 sm:space-x-2'}`}>
-          {slideImages.map((_, index) => (
+        <div className={`flex items-center ${isTouchDevice ? 'overflow-x-auto pb-2 hide-scrollbar' : 'space-x-1 sm:space-x-2'}`}>
+          {slideImages.slice(0, isTouchDevice ? 10 : slideImages.length).map((_, index) => (
             <button
               key={`dot-${index}`}
-              className={`h-1.5 sm:h-2 rounded-full transition-all duration-300 mb-1 flex-shrink-0 ${
-                currentSlide === index ? "w-6 sm:w-8 bg-white" : "w-2 sm:w-2.5 bg-white/50"
+              className={`rounded-full transition-all duration-300 mb-1 mx-1 flex-shrink-0 ${
+                currentSlide === index 
+                  ? "h-3 w-3 bg-white" 
+                  : "h-2 w-2 bg-white/50 hover:bg-white/70"
               }`}
               onClick={() => setCurrentSlide(index)}
               aria-label={`Go to slide ${index + 1}`}
-              style={{ minWidth: currentSlide === index ? '1.5rem' : '0.5rem' }}
             />
           ))}
+          {isTouchDevice && slideImages.length > 10 && (
+            <span className="text-white/70 text-xs mx-1">+{slideImages.length - 10}</span>
+          )}
         </div>
         
         {/* Navigation buttons - increased size for touch friendliness */}
