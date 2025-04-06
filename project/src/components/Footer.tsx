@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import { ArrowUpRight, Instagram, Facebook, Twitter, Linkedin } from 'lucide-react';
+import { ArrowUpRight, Instagram, Facebook, Twitter, Linkedin, Mail, Phone, MapPin } from 'lucide-react';
 
 const Footer = () => {
   const [ref, inView] = useInView({
@@ -39,7 +39,7 @@ const Footer = () => {
       initial="hidden"
       animate={inView ? "visible" : "hidden"}
       variants={containerVariants}
-      className="relative text-white py-24"
+      className="relative text-white py-16 sm:py-20 md:py-24"
       style={{
         backgroundImage: `url(${bgImageUrl})`,
         backgroundSize: 'cover',
@@ -52,109 +52,145 @@ const Footer = () => {
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Main Footer Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-16">
-          {/* Heading and CTA - Left side (5 columns) */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-12 mb-12 lg:mb-16">
+          {/* Heading and CTA - Left side */}
           <motion.div 
             variants={itemVariants}
-            className="lg:col-span-5 space-y-8"
+            className="lg:col-span-5 space-y-6 sm:space-y-8"
           >
-            <h2 className="text-5xl font-light leading-tight">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-light leading-tight">
               Making Luxury Living Effortless
             </h2>
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="px-8 py-4 border-2 border-white text-white text-lg font-light 
-                       rounded-full hover:bg-white/10 transition-all duration-300"
+              className="px-6 sm:px-8 py-3 sm:py-4 border-2 border-white text-white text-base sm:text-lg font-light 
+                       rounded-full hover:bg-white/10 transition-all duration-300 inline-flex items-center"
             >
-              Book Visit
+              Book Visit <ArrowUpRight className="ml-2 w-4 h-4" />
             </motion.button>
+            
+            {/* Contact information - mobile visible */}
+            <div className="block md:hidden space-y-4 mt-8 pt-8 border-t border-white/20">
+              <div className="flex items-center">
+                <Phone className="w-5 h-5 mr-3 text-blue-300" />
+                <span>+251 11 554 7878</span>
+              </div>
+              <div className="flex items-center">
+                <Mail className="w-5 h-5 mr-3 text-blue-300" />
+                <span>info@ayat.com</span>
+              </div>
+              <div className="flex items-start">
+                <MapPin className="w-5 h-5 mr-3 text-blue-300 mt-1" />
+                <span>Ayat Real Estate, Bole Road<br />Addis Ababa, Ethiopia</span>
+              </div>
+            </div>
           </motion.div>
 
-          {/* Footer Links - Right side (7 columns) */}
+          {/* Footer Links - Right side */}
           <motion.div 
             variants={itemVariants}
-            className="lg:col-span-7 grid grid-cols-1 md:grid-cols-3 gap-10"
+            className="lg:col-span-7 grid grid-cols-2 sm:grid-cols-3 gap-8"
           >
             {/* Pages Links */}
-            <div className="space-y-6">
-              <h3 className="text-lg font-semibold mb-2">Pages</h3>
-              <ul className="space-y-4">
+            <div className="space-y-4 sm:space-y-6">
+              <h3 className="text-lg font-semibold mb-2 sm:mb-4">Pages</h3>
+              <ul className="space-y-3 sm:space-y-4">
                 <li>
-                  <a href="#" className="text-gray-300 hover:text-white transition-colors duration-200">
-                    Home
+                  <a href="#" className="text-gray-300 hover:text-white transition-colors duration-200 inline-flex items-center group">
+                    <span>Home</span>
+                    <ArrowUpRight className="ml-1 w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="text-gray-300 hover:text-white transition-colors duration-200">
-                    About
+                  <a href="#" className="text-gray-300 hover:text-white transition-colors duration-200 inline-flex items-center group">
+                    <span>About</span>
+                    <ArrowUpRight className="ml-1 w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="text-gray-300 hover:text-white transition-colors duration-200">
-                    Projects
+                  <a href="#" className="text-gray-300 hover:text-white transition-colors duration-200 inline-flex items-center group">
+                    <span>Projects</span>
+                    <ArrowUpRight className="ml-1 w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="text-gray-300 hover:text-white transition-colors duration-200">
-                    Contact
+                  <a href="#" className="text-gray-300 hover:text-white transition-colors duration-200 inline-flex items-center group">
+                    <span>Contact</span>
+                    <ArrowUpRight className="ml-1 w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
                   </a>
                 </li>
               </ul>
             </div>
 
             {/* Info Links */}
-            <div className="space-y-6">
-              <h3 className="text-lg font-semibold mb-2">Info</h3>
-              <ul className="space-y-4">
+            <div className="space-y-4 sm:space-y-6">
+              <h3 className="text-lg font-semibold mb-2 sm:mb-4">Info</h3>
+              <ul className="space-y-3 sm:space-y-4">
                 <li>
-                  <a href="#" className="text-gray-300 hover:text-white transition-colors duration-200">
-                    Blog
+                  <a href="#" className="text-gray-300 hover:text-white transition-colors duration-200 inline-flex items-center group">
+                    <span>Blog</span>
+                    <ArrowUpRight className="ml-1 w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="text-gray-300 hover:text-white transition-colors duration-200">
-                    Privacy Policy
+                  <a href="#" className="text-gray-300 hover:text-white transition-colors duration-200 inline-flex items-center group">
+                    <span>Privacy Policy</span>
+                    <ArrowUpRight className="ml-1 w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="text-gray-300 hover:text-white transition-colors duration-200">
-                    Terms & Conditions
+                  <a href="#" className="text-gray-300 hover:text-white transition-colors duration-200 inline-flex items-center group">
+                    <span>Terms & Conditions</span>
+                    <ArrowUpRight className="ml-1 w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="text-gray-300 hover:text-white transition-colors duration-200">
-                    Other Doc
+                  <a href="#" className="text-gray-300 hover:text-white transition-colors duration-200 inline-flex items-center group">
+                    <span>Other Doc</span>
+                    <ArrowUpRight className="ml-1 w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
                   </a>
                 </li>
               </ul>
             </div>
 
             {/* Social Links */}
-            <div className="space-y-6">
-              <h3 className="text-lg font-semibold mb-2">Social</h3>
-              <ul className="space-y-4">
+            <div className="space-y-4 sm:space-y-6">
+              <h3 className="text-lg font-semibold mb-2 sm:mb-4">Connect</h3>
+              <ul className="space-y-3 sm:space-y-4">
                 <li>
                   <a href="#" className="text-gray-300 hover:text-white transition-colors duration-200 flex items-center gap-2">
-                    <Instagram className="w-5 h-5" /> Instagram
+                    <Instagram className="w-5 h-5" /> <span>Instagram</span>
                   </a>
                 </li>
                 <li>
                   <a href="#" className="text-gray-300 hover:text-white transition-colors duration-200 flex items-center gap-2">
-                    <Facebook className="w-5 h-5" /> Facebook
+                    <Facebook className="w-5 h-5" /> <span>Facebook</span>
                   </a>
                 </li>
                 <li>
                   <a href="#" className="text-gray-300 hover:text-white transition-colors duration-200 flex items-center gap-2">
-                    <Twitter className="w-5 h-5" /> Twitter
+                    <Twitter className="w-5 h-5" /> <span>Twitter</span>
                   </a>
                 </li>
                 <li>
                   <a href="#" className="text-gray-300 hover:text-white transition-colors duration-200 flex items-center gap-2">
-                    <Linkedin className="w-5 h-5" /> Linkedin
+                    <Linkedin className="w-5 h-5" /> <span>LinkedIn</span>
                   </a>
                 </li>
               </ul>
+              
+              {/* Contact information - desktop visible */}
+              <div className="hidden md:block space-y-3 pt-8 mt-8 border-t border-white/20">
+                <div className="flex items-center">
+                  <Phone className="w-5 h-5 mr-3 text-blue-300" />
+                  <span>+251 11 554 7878</span>
+                </div>
+                <div className="flex items-center">
+                  <Mail className="w-5 h-5 mr-3 text-blue-300" />
+                  <span>info@ayat.com</span>
+                </div>
+              </div>
             </div>
           </motion.div>
         </div>
@@ -162,7 +198,7 @@ const Footer = () => {
         {/* Footer Bottom - Copyright */}
         <motion.div 
           variants={itemVariants}
-          className="pt-8 border-t border-white/20 text-sm text-gray-300 flex flex-col md:flex-row justify-between items-center"
+          className="pt-6 sm:pt-8 border-t border-white/20 text-xs sm:text-sm text-gray-300 flex flex-col md:flex-row justify-between items-center gap-4"
         >
           <div className="flex items-center">
             {/* Ayat Logo - SVG version for better quality */}
@@ -172,7 +208,7 @@ const Footer = () => {
               viewBox="0 0 800 600" 
               fill="none" 
               xmlns="http://www.w3.org/2000/svg"
-              className="mb-2 md:mb-0"
+              className="w-auto h-8 sm:h-10 mb-2 md:mb-0"
             >
               {/* House roof */}
               <path d="M512 260L400 170L288 260L252 230L400 110L548 230L512 260Z" fill="white" stroke="white" strokeWidth="2"/>
@@ -202,7 +238,20 @@ const Footer = () => {
             </svg>
             <span className="ml-2 hidden md:inline">All rights reserved</span>
           </div>
-          <p className="mt-2 md:mt-0">Luxury Real Estate Development since 1996</p>
+          <p className="mt-0">Luxury Real Estate Development since 1996</p>
+          
+          {/* Back to top button - fixed position */}
+          <motion.button
+            whileHover={{ y: -5 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            className="fixed bottom-6 right-6 p-3 bg-blue-600 rounded-full shadow-lg z-50 text-white hover:bg-blue-700 transition-colors"
+            aria-label="Back to top"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M18 15l-6-6-6 6"/>
+            </svg>
+          </motion.button>
         </motion.div>
       </div>
     </motion.footer>

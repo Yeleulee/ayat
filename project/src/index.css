@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Mobile-first design approach - use rem units for better scaling */
 :root {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -10,17 +11,105 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-size: 16px; /* Base font size */
+  
+  /* CSS variables for consistent spacing */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+  
+  /* Touch-friendly minimum sizes */
+  --min-touch-target: 44px;
+  
+  /* Fluid typography calculation variables */
+  --min-font-size: 16;
+  --max-font-size: 18;
+  --min-viewport-width: 320;
+  --max-viewport-width: 1920;
+}
+
+/* Apply fluid typography sizing based on viewport */
+@media screen and (min-width: 320px) {
+  :root {
+    font-size: calc(var(--min-font-size) * 1px + (var(--max-font-size) - var(--min-font-size)) * (100vw - var(--min-viewport-width) * 1px) / (var(--max-viewport-width) - var(--min-viewport-width)));
+  }
+}
+
+@media screen and (min-width: 1920px) {
+  :root {
+    font-size: calc(var(--max-font-size) * 1px);
+  }
+}
+
+/* Improve touch targets on mobile devices */
+@media (hover: none) and (pointer: coarse) {
+  button, 
+  .button, 
+  a, 
+  [role="button"],
+  input[type="submit"],
+  input[type="button"] {
+    min-height: var(--min-touch-target);
+    min-width: var(--min-touch-target);
+  }
+  
+  input[type="checkbox"],
+  input[type="radio"] {
+    transform: scale(1.25); /* Larger checkboxes and radio buttons on touch devices */
+    margin: 0 var(--space-sm);
+  }
 }
 
 body {
   color: #111;
   background-color: #fff;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden; /* Prevent horizontal scrolling */
+  -webkit-text-size-adjust: 100%; /* Prevent automatic text enlargement */
 }
 
-h1, h2, h3, h4, h5, h6 {
+/* Responsive Typography */
+h1 {
+  font-size: clamp(2rem, 5vw, 3.5rem);
   font-weight: 300;
   letter-spacing: -0.02em;
   line-height: 1.1;
+}
+
+h2 {
+  font-size: clamp(1.75rem, 4vw, 3rem);
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+h3 {
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+h4 {
+  font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+}
+
+h5, h6 {
+  font-size: clamp(1.125rem, 2vw, 1.5rem);
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+}
+
+p, li {
+  font-size: clamp(1rem, 1.5vw, 1.125rem);
 }
 
 .text-balance {
@@ -124,7 +213,45 @@ body {
   .hover-underline:hover:after {
     width: 100%;
   }
+  
+  /* Responsive image container */
+  .responsive-image {
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+    object-fit: cover;
+  }
+  
+  /* Responsive spacing utilities */
+  .responsive-padding {
+    padding: clamp(var(--space-md), 5vw, var(--space-xl));
+  }
+  
+  .responsive-margin {
+    margin: clamp(var(--space-md), 5vw, var(--space-xl));
+  }
+  
+  /* Better grid gap for mobile */
+  .mobile-friendly-gap {
+    gap: clamp(var(--space-sm), 3vw, var(--space-lg));
+  }
+  
+  /* Maintain aspect ratios */
+  .aspect-video {
+    aspect-ratio: 16 / 9;
+  }
+  
+  .aspect-square {
+    aspect-ratio: 1 / 1;
+  }
+  
+  .aspect-portrait {
+    aspect-ratio: 3 / 4;
+  }
 }
+
+/* Tailwind applies breakpoints in mobile-first approach */
+/* xs: 480px, sm: 640px, md: 768px, lg: 1024px, xl: 1280px, 2xl: 1536px */
 
 /* Remove debugging styles */
 .debug-border {
@@ -141,4 +268,61 @@ body {
   transform: none;
   visibility: visible;
   display: block;
+}
+
+/* Improve tap targets on mobile */
+@media (max-width: 640px) {
+  button, a, .clickable {
+    padding: 0.75rem !important;
+  }
+  
+  nav button, nav a {
+    margin: 0.5rem 0;
+  }
+  
+  .button-group {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+}
+
+/* Optimize form inputs on mobile */
+@media (max-width: 640px) {
+  input, select, textarea {
+    font-size: 16px !important; /* Prevent iOS zoom on focus */
+    padding: 0.75rem !important;
+  }
+}
+
+/* Prevent images from breaking layouts */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Enhanced focus styles for accessibility */
+:focus {
+  outline: 2px solid rgba(59, 130, 246, 0.5);
+  outline-offset: 2px;
+}
+
+/* Focus visible only for keyboard navigation */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+:focus-visible {
+  outline: 2px solid rgba(59, 130, 246, 0.7);
+  outline-offset: 2px;
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

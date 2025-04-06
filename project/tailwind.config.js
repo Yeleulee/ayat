@@ -2,6 +2,14 @@
 export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
+    screens: {
+      'xs': '480px',
+      'sm': '640px',
+      'md': '768px',
+      'lg': '1024px',
+      'xl': '1280px',
+      '2xl': '1536px',
+    },
     extend: {
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
@@ -51,7 +59,45 @@ export default {
         '90': '90',
         '100': '100',
       },
+      aspectRatio: {
+        'portrait': '3/4',
+        'landscape': '4/3',
+        'ultra-wide': '21/9',
+        'golden': '1.618/1',
+      },
+      minHeight: {
+        'touch': '44px',
+      },
+      minWidth: {
+        'touch': '44px',
+      },
+      borderRadius: {
+        'large': '1rem',
+        'xl': '1.25rem',
+        '2xl': '1.5rem',
+      },
+      width: {
+        'touch': '44px',
+      },
+      height: {
+        'touch': '44px',
+      },
+      typography: {
+        DEFAULT: {
+          css: {
+            maxWidth: '65ch',
+            fontSize: '1rem',
+          }
+        }
+      },
+      listStyleType: {
+        square: 'square',
+        circle: 'circle',
+      },
     },
   },
   plugins: [],
+  corePlugins: {
+    aspectRatio: false,
+  },
 };

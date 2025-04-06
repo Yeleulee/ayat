@@ -1,0 +1,25 @@
+<svg width="180" height="180" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="180" height="180" rx="36" fill="#2563EB"/>
+  
+  <!-- House Outline -->
+  <path d="M90 40L30 82V140H150V82L90 40Z" stroke="white" stroke-width="6" fill="#1E40AF"/>
+  
+  <!-- Roof -->
+  <path d="M90 40L30 82H150L90 40Z" fill="white"/>
+  
+  <!-- Door -->
+  <path d="M80 110H100V140H80V110Z" fill="white"/>
+  
+  <!-- Window Left -->
+  <rect x="50" y="90" width="20" height="20" fill="white"/>
+  
+  <!-- Window Right -->
+  <rect x="110" y="90" width="20" height="20" fill="white"/>
+  
+  <!-- Text -->
+  <path d="M50 155L42 155L36 145L30 155L22 155L32 135L42 135L50 155Z" fill="white"/>
+  <path d="M56 155L56 135L66 135L66 143L76 143L76 135L86 135L86 155L76 155L76 151L66 151L66 155L56 155Z" fill="white"/>
+  <path d="M118 155L110 155L104 145L98 155L90 155L100 135L110 135L118 155Z" fill="white"/>
+  <path d="M124 155L124 135L140 135L140 143L132 143L132 145L138 145L138 151L132 151L132 153L140 153L140 155L124 155Z" fill="white"/>
+</svg> 

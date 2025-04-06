@@ -1,0 +1,19 @@
+<svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="100" height="100" rx="20" fill="#2563EB"/>
+  
+  <!-- House Outline -->
+  <path d="M50 20L20 42.5V80H80V42.5L50 20Z" stroke="white" stroke-width="4" fill="#1E40AF"/>
+  
+  <!-- Roof -->
+  <path d="M50 20L20 42.5H80L50 20Z" fill="white"/>
+  
+  <!-- Door -->
+  <path d="M45 60H55V80H45V60Z" fill="white"/>
+  
+  <!-- Window Left -->
+  <rect x="30" y="50" width="10" height="10" fill="white"/>
+  
+  <!-- Window Right -->
+  <rect x="60" y="50" width="10" height="10" fill="white"/>
+</svg> 

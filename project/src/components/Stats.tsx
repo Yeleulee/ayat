@@ -111,11 +111,11 @@ const Stats = () => {
   const headingLetters = headingText.split("");
 
   return (
-    <div id="stats" className="py-32 bg-white overflow-hidden">
-      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10">
-    <motion.div 
+    <div id="stats" className="py-16 sm:py-24 md:py-32 bg-white overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10">
+        <motion.div 
           ref={containerRef}
-          className="grid grid-cols-1 md:grid-cols-2 gap-16"
+          className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16"
         >
           {/* Left Column - Stats */}
           <div>
@@ -125,7 +125,7 @@ const Stats = () => {
               variants={headingVariants}
               className="flex overflow-hidden"
             >
-              <h2 className="text-3xl md:text-4xl font-extralight tracking-tight text-gray-900 mb-10 flex flex-wrap">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-extralight tracking-tight text-gray-900 mb-6 sm:mb-10 flex flex-wrap">
                 {headingLetters.map((letter, index) => (
                   <motion.span key={index} variants={letterVariants} className="inline-block">
                     {letter === " " ? "\u00A0" : letter}
@@ -149,10 +149,10 @@ const Stats = () => {
                   }
                 }
               }}
-              className="h-px bg-gray-300 mb-16"
+              className="h-px bg-gray-300 mb-10 sm:mb-16"
             />
             
-            <div className="space-y-16">
+            <div className="space-y-10 sm:space-y-16">
               {/* Projects Completed */}
               <motion.div 
                 initial="hidden"
@@ -174,14 +174,14 @@ const Stats = () => {
                 <motion.div 
                   whileHover={{ scale: 1.1, backgroundColor: "#f8f8f8", boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.05)" }}
                   transition={{ type: "spring", stiffness: 400, damping: 15 }}
-                  className="w-16 h-16 flex items-center justify-center border border-gray-200 rounded-full mr-6 transition-all duration-300 relative bg-white"
+                  className="w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center border border-gray-200 rounded-full mr-4 sm:mr-6 transition-all duration-300 relative bg-white"
                 >
                   <motion.div
                     initial={{ scale: 0.8, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{ delay: 0.1, duration: 0.4 }}
                   >
-                    <Building2 strokeWidth={1.25} className="text-gray-700 w-6 h-6" />
+                    <Building2 strokeWidth={1.25} className="text-gray-700 w-5 h-5 sm:w-6 sm:h-6" />
                   </motion.div>
                   <motion.div 
                     className="absolute -top-1 -right-1 w-3 h-3 bg-blue-500 rounded-full"
@@ -203,7 +203,7 @@ const Stats = () => {
                   <motion.div className="relative">
                     <motion.p 
                       ref={projectsRef}
-                      className="text-5xl font-extralight text-gray-900"
+                      className="text-3xl sm:text-4xl md:text-5xl font-extralight text-gray-900"
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       transition={{ duration: 0.5 }}
@@ -247,14 +247,14 @@ const Stats = () => {
                 <motion.div 
                   whileHover={{ scale: 1.1, backgroundColor: "#f8f8f8", boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.05)" }}
                   transition={{ type: "spring", stiffness: 400, damping: 15 }}
-                  className="w-16 h-16 flex items-center justify-center border border-gray-200 rounded-full mr-6 transition-all duration-300 relative bg-white"
+                  className="w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center border border-gray-200 rounded-full mr-4 sm:mr-6 transition-all duration-300 relative bg-white"
                 >
                   <motion.div
                     initial={{ scale: 0.8, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{ delay: 0.2, duration: 0.4 }}
                   >
-                    <Home strokeWidth={1.25} className="text-gray-700 w-6 h-6" />
+                    <Home strokeWidth={1.25} className="text-gray-700 w-5 h-5 sm:w-6 sm:h-6" />
                   </motion.div>
                   <motion.div 
                     className="absolute -top-1 -right-1 w-3 h-3 bg-teal-500 rounded-full"
@@ -276,7 +276,7 @@ const Stats = () => {
                   <motion.div className="relative">
                     <motion.p 
                       ref={residentialRef}
-                      className="text-5xl font-extralight text-gray-900"
+                      className="text-3xl sm:text-4xl md:text-5xl font-extralight text-gray-900"
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       transition={{ duration: 0.5 }}
@@ -292,7 +292,7 @@ const Stats = () => {
                       className="absolute bottom-0 left-0 h-px bg-teal-500"
                       initial={{ width: 0 }}
                       animate={{ width: residentialCount === 87 ? "100%" : "0%" }}
-              transition={{ duration: 0.5, delay: 0.2 }}
+                      transition={{ duration: 0.5, delay: 0.2 }}
                     />
                   </motion.div>
                 </div>
@@ -319,14 +319,14 @@ const Stats = () => {
                 <motion.div 
                   whileHover={{ scale: 1.1, backgroundColor: "#f8f8f8", boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.05)" }}
                   transition={{ type: "spring", stiffness: 400, damping: 15 }}
-                  className="w-16 h-16 flex items-center justify-center border border-gray-200 rounded-full mr-6 transition-all duration-300 relative bg-white"
+                  className="w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center border border-gray-200 rounded-full mr-4 sm:mr-6 transition-all duration-300 relative bg-white"
                 >
                   <motion.div
                     initial={{ scale: 0.8, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{ delay: 0.3, duration: 0.4 }}
                   >
-                    <Landmark strokeWidth={1.25} className="text-gray-700 w-6 h-6" />
+                    <Landmark strokeWidth={1.25} className="text-gray-700 w-5 h-5 sm:w-6 sm:h-6" />
                   </motion.div>
                   <motion.div 
                     className="absolute -top-1 -right-1 w-3 h-3 bg-amber-500 rounded-full"
@@ -348,7 +348,7 @@ const Stats = () => {
                   <motion.div className="relative">
                     <motion.p 
                       ref={commercialRef}
-                      className="text-5xl font-extralight text-gray-900"
+                      className="text-3xl sm:text-4xl md:text-5xl font-extralight text-gray-900"
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       transition={{ duration: 0.5 }}
@@ -366,9 +366,9 @@ const Stats = () => {
                       animate={{ width: commercialCount === 42 ? "100%" : "0%" }}
                       transition={{ duration: 0.5, delay: 0.2 }}
                     />
-            </motion.div>
+                  </motion.div>
                 </div>
-          </motion.div>
+              </motion.div>
             </div>
           </div>
           
@@ -388,7 +388,7 @@ const Stats = () => {
                 }
               }
             }}
-            className="relative"
+            className="relative mt-8 md:mt-0"
           >
             <div className="overflow-hidden rounded-sm">
               <motion.img 
@@ -416,18 +416,18 @@ const Stats = () => {
                   }
                 }
               }}
-              className="absolute bottom-8 left-8 right-8"
+              className="absolute bottom-4 sm:bottom-8 left-4 sm:left-8 right-4 sm:right-8"
             >
-              <div className="bg-white/95 backdrop-blur-sm p-8 shadow-xl">
+              <div className="bg-white/95 backdrop-blur-sm p-5 sm:p-8 shadow-xl">
                 <motion.div
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 1.4, duration: 0.8 }}
                 >
-                  <p className="text-lg font-light text-gray-800 leading-relaxed">
+                  <p className="text-base sm:text-lg font-light text-gray-800 leading-relaxed">
                     "AYAT has transformed our vision into reality. The design is both timeless and practical, perfectly fitting our family's needs."
                   </p>
-                  <p className="mt-4 text-xs uppercase tracking-widest text-gray-500 font-light">— Client Testimonial</p>
+                  <p className="mt-3 sm:mt-4 text-xs uppercase tracking-widest text-gray-500 font-light">— Client Testimonial</p>
                 </motion.div>
               </div>
             </motion.div>

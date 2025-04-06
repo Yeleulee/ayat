@@ -10,19 +10,34 @@ const Projects = () => {
 
   const projects = [
     {
+      id: 1,
       title: "Kazanchis Apartments",
-      image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?ixlib=rb-1.2.1&auto=format&fit=crop&w=2850&q=80",
-      description: "Luxury apartments in central Addis Ababa"
+      description: "Luxury apartments in central Addis Ababa",
+      image: {
+        small: "https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=480",
+        medium: "https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=800",
+        large: "https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg"
+      }
     },
     {
+      id: 2,
       title: "Commercial Complex",
-      image: "https://images.unsplash.com/photo-1577495508048-b635879837f1?ixlib=rb-1.2.1&auto=format&fit=crop&w=2850&q=80",
-      description: "Modern retail and office spaces"
+      description: "Modern retail and office spaces",
+      image: {
+        small: "https://images.pexels.com/photos/256150/pexels-photo-256150.jpeg?auto=compress&cs=tinysrgb&w=480",
+        medium: "https://images.pexels.com/photos/256150/pexels-photo-256150.jpeg?auto=compress&cs=tinysrgb&w=800",
+        large: "https://images.pexels.com/photos/256150/pexels-photo-256150.jpeg"
+      }
     },
     {
+      id: 3,
       title: "Villa Community",
-      image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-1.2.1&auto=format&fit=crop&w=2850&q=80",
-      description: "Exclusive residential development"
+      description: "Exclusive residential development",
+      image: {
+        small: "https://images.pexels.com/photos/1732414/pexels-photo-1732414.jpeg?auto=compress&cs=tinysrgb&w=480",
+        medium: "https://images.pexels.com/photos/1732414/pexels-photo-1732414.jpeg?auto=compress&cs=tinysrgb&w=800",
+        large: "https://images.pexels.com/photos/1732414/pexels-photo-1732414.jpeg"
+      }
     }
   ];
 
@@ -47,8 +62,17 @@ const Projects = () => {
     }
   };
 
+  const getResponsiveImage = (project: typeof projects[0]) => {
+    if (typeof window === 'undefined') return project.image.medium;
+    
+    const width = window.innerWidth;
+    if (width < 640) return project.image.small;
+    if (width < 1024) return project.image.medium;
+    return project.image.large;
+  };
+
   return (
-    <div className="py-24 bg-gray-50">
+    <div className="py-16 sm:py-20 md:py-24 bg-gray-50">
       <motion.div 
         ref={ref}
         initial="hidden"
@@ -58,33 +82,49 @@ const Projects = () => {
       >
         <motion.div 
           variants={itemVariants}
-          className="text-center mb-16"
+          className="text-center mb-8 sm:mb-12 md:mb-16"
         >
-          <h2 className="text-4xl font-bold mb-4">Featured Properties</h2>
-          <p className="text-gray-600 max-w-2xl mx-auto">
+          <h2 className="text-3xl sm:text-4xl font-bold mb-4">Featured Properties</h2>
+          <p className="text-gray-600 max-w-2xl mx-auto px-4">
             Discover our latest developments across Addis Ababa, setting new standards in modern living and commercial spaces.
           </p>
         </motion.div>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
           {projects.map((project, index) => (
             <motion.div
-              key={index}
+              key={project.id}
               variants={itemVariants}
               whileHover={{ y: -10 }}
-              className="group cursor-pointer"
+              className="group cursor-pointer flex flex-col h-full"
             >
-              <div className="relative overflow-hidden rounded-xl">
+              <div className="relative overflow-hidden rounded-xl aspect-[4/3]">
                 <motion.img 
-                  src={project.image} 
+                  src={getResponsiveImage(project)}
                   alt={project.title}
-                  className="w-full h-64 object-cover"
+                  className="w-full h-full object-cover"
+                  loading={index === 0 ? "eager" : "lazy"}
                   whileHover={{ scale: 1.1 }}
                   transition={{ duration: 0.6 }}
                 />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </div>
-              <h3 className="text-xl font-bold mt-4">{project.title}</h3>
-              <p className="text-gray-600 mt-2">{project.description}</p>
+              <div className="p-4">
+                <h3 className="text-xl font-bold mt-2">{project.title}</h3>
+                <p className="text-gray-600 mt-2">{project.description}</p>
+              </div>
+              <div className="mt-auto p-4 pt-0">
+                <motion.div 
+                  className="mt-2 inline-flex items-center text-blue-600 font-medium"
+                  whileHover={{ x: 5 }}
+                  transition={{ type: "spring", stiffness: 400 }}
+                >
+                  <span>View details</span>
+                  <svg className="w-5 h-5 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </motion.div>
+              </div>
             </motion.div>
           ))}
         </div>

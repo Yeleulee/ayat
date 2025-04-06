@@ -45,6 +45,14 @@ const ProjectsPage: React.FC = () => {
   const [favoritedProperties, setFavoritedProperties] = useState<number[]>([]);
   const [visibleProperties, setVisibleProperties] = useState<number>(20);
 
+  // Add state for video loading
+  const [videoLoaded, setVideoLoaded] = useState(false);
+  const [videoError, setVideoError] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  
+  // Check if device is mobile for optimization
+  const [isMobile, setIsMobile] = useState(false);
+
   // Property data with high-quality images from Unsplash/Pexels
   const properties: Property[] = [
     {
@@ -213,7 +221,7 @@ const ProjectsPage: React.FC = () => {
       area: 220,
       location: "Kazanchis, Addis Ababa",
       description: "Multi-level penthouse with cascading terraces, jacuzzi, and 360-degree views.",
-      image: "https://images.pexels.com/photos/1918291/pexels-photo-1918291.jpeg",
+      image: "https://images.pexels.com/photos/323780/pexels-photo-323780.jpeg",
       featured: true
     },
     {
@@ -343,7 +351,7 @@ const ProjectsPage: React.FC = () => {
       area: 260,
       location: "Kazanchis, Addis Ababa",
       description: "Opulent penthouse with astronomically-inspired design, observatory, and smart lighting.",
-      image: "https://images.pexels.com/photos/1918291/pexels-photo-1918291.jpeg",
+      image: "https://images.pexels.com/photos/2102587/pexels-photo-2102587.jpeg",
       featured: true
     },
     {
@@ -473,7 +481,7 @@ const ProjectsPage: React.FC = () => {
       area: 300,
       location: "Bole, Addis Ababa",
       description: "Regal penthouse with palatial design, imported materials, and staff quarters.",
-      image: "https://images.pexels.com/photos/1918291/pexels-photo-1918291.jpeg",
+      image: "https://images.pexels.com/photos/1643383/pexels-photo-1643383.jpeg",
       featured: true
     },
     {
@@ -603,7 +611,7 @@ const ProjectsPage: React.FC = () => {
       area: 275,
       location: "Bole, Addis Ababa",
       description: "Boundary-pushing design with infinity pool, retractable roof, and smart glass technology.",
-      image: "https://images.pexels.com/photos/1918291/pexels-photo-1918291.jpeg",
+      image: "https://images.pexels.com/photos/1571468/pexels-photo-1571468.jpeg",
       featured: true
     },
     {
@@ -709,8 +717,32 @@ const ProjectsPage: React.FC = () => {
       description: "Ethiopia's most prestigious estate with marble floors, grand ballroom, private cinema, indoor and outdoor pools, and 24/7 security system.",
       image: "https://images.pexels.com/photos/2980955/pexels-photo-2980955.jpeg",
       featured: true
+    },
+    {
+      id: 12,
+      title: "Olive Grove Estate",
+      type: "Villa",
+      price: 8100000,
+      bedrooms: 5,
+      bathrooms: 4,
+      area: 380,
+      location: "Ayat, Addis Ababa",
+      description: "Mediterranean-inspired villa set in mature gardens with outdoor entertaining areas and pool.",
+      image: "https://images.pexels.com/photos/1396122/pexels-photo-1396122.jpeg",
+      featured: false
     }
   ];
+
+  // Detect mobile devices
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   // Animation effects when in view
   useEffect(() => {
@@ -879,8 +911,11 @@ const ProjectsPage: React.FC = () => {
     console.log("Loading more properties, now showing:", Math.min(visibleProperties + 20, filteredAndSortedProperties.length));
   };
 
+  // Video background fallback image
+  const headerBgFallback = "https://images.pexels.com/photos/1732414/pexels-photo-1732414.jpeg";
+
   return (
-    <div className="bg-gray-50 py-20 min-h-screen">
+    <div className="bg-gray-50 py-10 sm:py-16 md:py-20 min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Page Header with Video Background */}
         <motion.div 
@@ -888,59 +923,74 @@ const ProjectsPage: React.FC = () => {
           initial="hidden"
           animate={headerInView ? "visible" : "hidden"}
           variants={containerVariants}
-          className="mb-20 relative overflow-hidden rounded-3xl shadow-2xl"
+          className="mb-10 sm:mb-16 md:mb-20 relative overflow-hidden rounded-xl sm:rounded-2xl lg:rounded-3xl shadow-xl"
         >
-          {/* Video Background */}
-          <div className="relative w-full h-[500px] overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-black/60 z-10"></div>
-            <video
-              autoPlay
-              muted
-              loop
-              playsInline
-              className="absolute inset-0 w-full h-full object-cover"
-            >
-              <source src="https://assets.mixkit.co/videos/preview/mixkit-luxury-house-interior-2907-large.mp4" type="video/mp4" />
-            </video>
+          {/* Video Background with responsive height */}
+          <div className="relative w-full h-[350px] sm:h-[400px] md:h-[450px] lg:h-[500px] overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/60 z-10"></div>
             
-            {/* Header Content Overlay */}
-            <div className="relative z-20 h-full flex flex-col justify-center items-center text-center p-8">
+            {/* Fallback image shown until video loads or if video fails */}
+            <img
+              src={headerBgFallback}
+              alt="Luxury Real Estate"
+              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${videoLoaded && !videoError ? 'opacity-0' : 'opacity-100'}`}
+              loading="eager"
+            />
+            
+            {/* Video optimized for device type */}
+            {!isMobile && (
+              <video
+                ref={videoRef}
+                autoPlay
+                muted
+                loop
+                playsInline
+                className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${videoLoaded ? 'opacity-100' : 'opacity-0'}`}
+                onLoadedData={() => setVideoLoaded(true)}
+                onError={() => setVideoError(true)}
+              >
+                <source src="https://assets.mixkit.co/videos/preview/mixkit-modern-house-with-pool-aerial-view-4649-large.mp4" type="video/mp4" />
+              </video>
+            )}
+            
+            {/* Header Content Overlay - responsive layout */}
+            <div className="relative z-20 h-full flex flex-col justify-center items-center text-center p-4 sm:p-6 md:p-8">
               <motion.div
                 variants={itemVariants}
-                className="bg-black/30 backdrop-blur-sm p-10 rounded-3xl max-w-3xl"
+                className="bg-black/30 backdrop-blur-sm p-5 sm:p-8 md:p-10 rounded-xl sm:rounded-2xl max-w-xl sm:max-w-2xl md:max-w-3xl w-full"
               >
                 <motion.h1 
                   variants={itemVariants}
-                  className="text-5xl font-bold mb-6 text-white"
+                  className="text-3xl sm:text-4xl md:text-5xl font-bold mb-3 sm:mb-6 text-white leading-tight"
                 >
                   Discover Your Dream Home
                 </motion.h1>
                 <motion.p 
                   variants={itemVariants}
-                  className="text-xl text-gray-200 max-w-3xl mx-auto mb-10"
+                  className="text-base sm:text-lg md:text-xl text-gray-200 mx-auto mb-6 sm:mb-10"
                 >
                   Browse our collection of luxury properties in Addis Ababa's most sought-after neighborhoods.
                 </motion.p>
                 
-                {/* Search input with animation */}
+                {/* Search input with animation - responsive */}
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={searchBarControls}
-                  className="relative max-w-2xl mx-auto"
+                  className="relative max-w-md sm:max-w-lg md:max-w-2xl mx-auto"
                 >
                   <input
                     type="text"
                     placeholder="Search by location, property name..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full pl-16 pr-4 py-4 rounded-xl border border-white/20 bg-white/10 backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent shadow-md text-lg text-white placeholder:text-gray-300"
+                    className="w-full pl-12 sm:pl-16 pr-4 py-3 sm:py-4 rounded-lg sm:rounded-xl border border-white/20 bg-white/10 backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent shadow-md text-base sm:text-lg text-white placeholder:text-gray-300"
                   />
                   <motion.div
                     animate={{ scale: [1, 1.05, 1] }}
                     transition={{ duration: 1.5, repeat: Infinity, repeatType: "loop", ease: "easeInOut" }}
-                    className="absolute left-5 top-1/2 transform -translate-y-1/2 text-white"
+                    className="absolute left-3 sm:left-5 top-1/2 transform -translate-y-1/2 text-white"
                   >
-                    <Search className="w-6 h-6" />
+                    <Search className="w-5 h-5 sm:w-6 sm:h-6" />
                   </motion.div>
                   {searchQuery && (
                     <button
@@ -956,14 +1006,14 @@ const ProjectsPage: React.FC = () => {
           </div>
         </motion.div>
 
-        {/* Search and Filter Section */}
+        {/* Search and Filter Section - responsive improvements */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 0.8 }}
-          className="mb-12 bg-white rounded-2xl shadow-lg overflow-hidden"
+          className="mb-8 sm:mb-12 bg-white rounded-xl sm:rounded-2xl shadow-lg overflow-hidden"
         >
-          <div className="flex flex-col md:flex-row justify-between items-center p-6">
+          <div className="flex flex-col md:flex-row justify-between items-center p-4 sm:p-6">
             {/* Filter Toggle Button with animation */}
             <motion.button
               ref={searchButtonRef}
@@ -972,7 +1022,7 @@ const ProjectsPage: React.FC = () => {
               whileHover="hover"
               whileTap="tap"
               onClick={() => setShowFilters(!showFilters)}
-              className="flex items-center space-x-2 px-6 py-4 bg-blue-50 hover:bg-blue-100 rounded-full transition-colors mb-4 md:mb-0 relative"
+              className="flex items-center space-x-2 px-4 sm:px-6 py-3 sm:py-4 bg-blue-50 hover:bg-blue-100 rounded-full transition-colors mb-4 md:mb-0 relative w-full md:w-auto justify-center md:justify-start"
             >
               <Sliders size={18} className="text-blue-500" />
               <span className="font-medium text-blue-700">Filters</span>
@@ -986,12 +1036,12 @@ const ProjectsPage: React.FC = () => {
             </motion.button>
             
             {/* Price Stats Card */}
-            <div className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl px-6 py-3 flex items-center">
+            <div className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl px-4 sm:px-6 py-3 flex items-center w-full md:w-auto justify-center md:justify-start">
               <div className="text-center">
                 <p className="text-xs text-blue-700 font-semibold uppercase tracking-wider">Average Price</p>
                 <p className="font-bold text-blue-900">{formatPrice(averagePrice)}</p>
               </div>
-              <div className="h-12 w-px bg-blue-200 mx-6"></div>
+              <div className="h-12 w-px bg-blue-200 mx-4 sm:mx-6"></div>
               <div className="text-center">
                 <p className="text-xs text-blue-700 font-semibold uppercase tracking-wider">Price Range</p>
                 <p className="font-bold text-blue-900">
@@ -1144,8 +1194,8 @@ const ProjectsPage: React.FC = () => {
           </AnimatePresence>
         </motion.div>
 
-        {/* Results Count and Sort Controls */}
-        <div className="mb-10 flex flex-col sm:flex-row justify-between items-start sm:items-center">
+        {/* Results Count and Sort Controls - improve responsive layout */}
+        <div className="mb-6 sm:mb-10 flex flex-col sm:flex-row justify-between items-start sm:items-center">
           <div className="flex items-center mb-4 sm:mb-0">
             <motion.div
               initial={{ scale: 0 }}
@@ -1163,14 +1213,14 @@ const ProjectsPage: React.FC = () => {
           </div>
           
           {/* Dropdown sort selector with animation */}
-          <div className="relative">
+          <div className="relative w-full sm:w-auto">
             <motion.button
               variants={buttonHoverVariants}
               initial="rest"
               whileHover="hover"
               whileTap="tap"
               onClick={() => setShowSortOptions(!showSortOptions)}
-              className="flex items-center justify-between min-w-52 px-4 py-3 bg-white border border-gray-300 rounded-lg shadow-sm hover:border-blue-300 transition-colors"
+              className="flex items-center justify-between w-full sm:min-w-52 px-4 py-3 bg-white border border-gray-300 rounded-lg shadow-sm hover:border-blue-300 transition-colors"
             >
               <span className="text-gray-700">{activeSortOption}</span>
               <motion.div
@@ -1216,13 +1266,13 @@ const ProjectsPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Properties Grid with staggered animations */}
+        {/* Properties Grid - improve responsive layout */}
         <motion.div 
           ref={propertiesRef}
           initial="hidden"
           animate="visible"
           variants={containerVariants}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8"
         >
           {filteredAndSortedProperties.length > 0 ? (
             <>
