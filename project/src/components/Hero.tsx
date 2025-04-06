@@ -26,6 +26,9 @@ const Hero: React.FC<HeroProps> = ({ setCurrentPage }) => {
   // Add state for detecting touch devices
   const [isTouchDevice, setIsTouchDevice] = useState(false);
   
+  // Add direction state to track slide direction
+  const [direction, setDirection] = useState(0);
+  
   // Responsive image URLs for different screen sizes with maximum quality
   const slideImages = [
     {
@@ -204,10 +207,11 @@ const Hero: React.FC<HeroProps> = ({ setCurrentPage }) => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Auto slide functionality
+  // Auto slide functionality with direction
   useEffect(() => {
     const timer = setTimeout(() => {
       if (loaded) {
+        setDirection(1); // Always go forward for auto-slides
         setCurrentSlide((prevSlide) => (prevSlide + 1) % slideImages.length);
       }
     }, 8000);
@@ -244,18 +248,16 @@ const Hero: React.FC<HeroProps> = ({ setCurrentPage }) => {
     setIsTouchDevice('ontouchstart' in window || navigator.maxTouchPoints > 0);
   }, []);
 
-  // Enhance slide navigation functions with immediate feedback
+  // Enhanced slide navigation functions
   const handleNext = () => {
-    // Temporarily set loaded to false to trigger preloading
+    setDirection(1);
     setLoaded(false);
-    // Advance to the next slide
     setCurrentSlide((prevSlide) => (prevSlide + 1) % slideImages.length);
   };
 
   const handlePrev = () => {
-    // Temporarily set loaded to false to trigger preloading
+    setDirection(-1);
     setLoaded(false);
-    // Go back to the previous slide
     setCurrentSlide((prevSlide) => 
       prevSlide === 0 ? slideImages.length - 1 : prevSlide - 1
     );
@@ -276,25 +278,56 @@ const Hero: React.FC<HeroProps> = ({ setCurrentPage }) => {
     return imageSet.desktop; // Default for SSR
   };
 
-  // Variants for motion animations
+  // Variants for motion animations - changed to horizontal sliding
   const slideVariants = {
-    initial: { opacity: 0 },
-    enter: { opacity: 1, transition: { duration: 1.2, ease: [0.19, 1.0, 0.22, 1.0] } },
-    exit: { opacity: 0, transition: { duration: 0.8, ease: [0.19, 1.0, 0.22, 1.0] } }
+    initial: (direction: number) => ({
+      x: direction > 0 ? '100%' : '-100%',
+      opacity: 0.5,
+      scale: 0.95,
+    }),
+    enter: {
+      x: 0,
+      opacity: 1,
+      scale: 1,
+      transition: {
+        x: { type: "spring", stiffness: 300, damping: 30 },
+        opacity: { duration: 0.5 },
+        scale: { duration: 0.5 }
+      }
+    },
+    exit: (direction: number) => ({
+      x: direction < 0 ? '100%' : '-100%',
+      opacity: 0.5,
+      scale: 0.95,
+      transition: {
+        x: { type: "spring", stiffness: 300, damping: 30 },
+        opacity: { duration: 0.5 },
+        scale: { duration: 0.5 }
+      }
+    })
   };
 
   const contentVariants = {
-    initial: { opacity: 0, y: 20 },
-    enter: (custom: number) => ({
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.7,
-        ease: [0.19, 1.0, 0.22, 1.0],
-        delay: 0.4 + custom * 0.1
-      }
+    initial: (direction: number) => ({
+      opacity: 0,
+      x: direction > 0 ? 50 : -50,
     }),
-    exit: { opacity: 0, y: -20, transition: { duration: 0.6 } }
+    enter: {
+      opacity: 1,
+      x: 0,
+      transition: {
+        duration: 0.5,
+        ease: [0.19, 1.0, 0.22, 1.0],
+        staggerChildren: 0.1
+      }
+    },
+    exit: (direction: number) => ({
+      opacity: 0,
+      x: direction < 0 ? 50 : -50,
+      transition: {
+        duration: 0.3
+      }
+    })
   };
 
   // Add smooth scroll function for the down arrow
@@ -346,10 +379,11 @@ const Hero: React.FC<HeroProps> = ({ setCurrentPage }) => {
       `}} />
       
       {/* Slide images */}
-      <div ref={slidesRef} className="absolute inset-0">
-        <AnimatePresence initial={false} mode="sync">
+      <div ref={slidesRef} className="absolute inset-0 overflow-hidden">
+        <AnimatePresence initial={false} mode="sync" custom={direction}>
           <motion.div
             key={`slide-${currentSlide}`}
+            custom={direction}
             variants={slideVariants}
             initial="initial"
             animate="enter"
@@ -369,36 +403,29 @@ const Hero: React.FC<HeroProps> = ({ setCurrentPage }) => {
         </AnimatePresence>
       </div>
 
-      {/* Slide content - improved mobile styling */}
+      {/* Slide content - improved with dynamic direction */}
       <div className="absolute inset-0 z-20 flex flex-col justify-center max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <AnimatePresence mode="wait">
-          <div key={`content-${currentSlide}`} className="py-8 sm:py-12 md:py-0 my-auto">
+        <AnimatePresence mode="wait" custom={direction}>
+          <motion.div 
+            key={`content-${currentSlide}`} 
+            className="py-8 sm:py-12 md:py-0 my-auto"
+            variants={contentVariants}
+            custom={direction}
+            initial="initial"
+            animate="enter"
+            exit="exit"
+          >
             <motion.h1
-              custom={0}
-              variants={contentVariants}
-              initial="initial"
-              animate="enter"
-              exit="exit"
               className="text-white text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-light tracking-tight mb-3 sm:mb-4 max-w-3xl leading-tight"
             >
               {slideTitles[currentSlide]}
             </motion.h1>
             <motion.p
-              custom={1}
-              variants={contentVariants}
-              initial="initial"
-              animate="enter"
-              exit="exit"
               className="text-white/90 text-base sm:text-lg md:text-xl font-light mb-8 max-w-xl leading-relaxed"
             >
               {slideSubtitles[currentSlide]}
             </motion.p>
             <motion.div
-              custom={2}
-              variants={contentVariants}
-              initial="initial"
-              animate="enter"
-              exit="exit"
               className="flex flex-col sm:flex-row gap-4"
             >
               <motion.button
@@ -419,7 +446,7 @@ const Hero: React.FC<HeroProps> = ({ setCurrentPage }) => {
                 Learn More <ArrowRight className="ml-2 w-4 h-4" />
               </motion.button>
             </motion.div>
-          </div>
+          </motion.div>
         </AnimatePresence>
       </div>
 
