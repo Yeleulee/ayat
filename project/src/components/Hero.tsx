@@ -363,30 +363,42 @@ const Hero: React.FC<HeroProps> = ({ setCurrentPage }) => {
 
   // Add smooth scroll function for the down arrow
   const scrollToProjects = () => {
-    // Try to find the projects section first
-    const projectsSection = document.getElementById('projects-section');
+    console.log("Scroll to projects clicked");
     
-    if (projectsSection) {
-      // Smooth scroll to the projects section if it exists
-      projectsSection.scrollIntoView({ behavior: 'smooth' });
-    } else {
-      // Otherwise look for the properties section
-      const propertiesSection = document.getElementById('properties');
-      if (propertiesSection) {
-        propertiesSection.scrollIntoView({ behavior: 'smooth' });
-      } else {
-        // Last resort - navigate to projects page
-        setCurrentPage('projects');
-        
-        // Add a small delay and then scroll down a bit
-        setTimeout(() => {
-          window.scrollTo({
-            top: window.innerHeight * 0.9,
-            behavior: 'smooth'
-          });
-        }, 100);
-      }
+    // Find the properties section in the home page
+    const propertiesSection = document.getElementById('properties');
+    if (propertiesSection) {
+      console.log("Found properties section, scrolling to it");
+      // Use a more reliable scroll method
+      window.scrollTo({
+        top: propertiesSection.offsetTop - 80, // Offset for header
+        behavior: 'smooth'
+      });
+      return;
     }
+
+    // If properties section not found, try the projects section
+    const projectsSection = document.getElementById('projects-section');
+    if (projectsSection) {
+      console.log("Found projects section, scrolling to it");
+      window.scrollTo({
+        top: projectsSection.offsetTop - 80, // Offset for header
+        behavior: 'smooth'
+      });
+      return;
+    }
+    
+    // If we still can't find any sections, navigate to projects page
+    console.log("No sections found, navigating to projects page");
+    setCurrentPage('projects');
+    
+    // Add a small delay and then scroll down
+    setTimeout(() => {
+      window.scrollTo({
+        top: window.innerHeight * 0.9,
+        behavior: 'smooth'
+      });
+    }, 100);
   };
 
   return (
@@ -532,32 +544,33 @@ const Hero: React.FC<HeroProps> = ({ setCurrentPage }) => {
       </div>
 
       {/* Scroll down button - separate for mobile and desktop */}
-      {/* Mobile version - simplified and repositioned */}
+      {/* Mobile version - more prominent and better positioned */}
       <motion.button
         initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 0.7, y: 0 }}
+        animate={{ opacity: 0.9, y: 0 }}
         transition={{ delay: 1, duration: 0.8 }}
-        whileHover={{ opacity: 0.9 }}
+        whileHover={{ opacity: 1, scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
         onClick={scrollToProjects}
-        className="sm:hidden absolute bottom-4 left-1/2 transform -translate-x-1/2 z-40 bg-black/30 text-white/90 rounded-full p-2 shadow-lg flex items-center justify-center w-9 h-9"
+        className="sm:hidden fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50 bg-blue-500/80 text-white rounded-full p-3 shadow-lg flex items-center justify-center w-12 h-12"
         aria-label="Scroll to properties"
       >
-        <ChevronDown size={18} strokeWidth={2.5} className="animate-bounce" />
+        <ChevronDown size={22} strokeWidth={2.5} className="animate-bounce" />
       </motion.button>
       
-      {/* Desktop version */}
+      {/* Desktop version - more prominent */}
       <motion.button
         initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 0.6, y: 0 }}
+        animate={{ opacity: 0.8, y: 0 }}
         transition={{ delay: 1, duration: 0.8 }}
-        whileHover={{ opacity: 0.8, y: 5 }}
+        whileHover={{ opacity: 1, scale: 1.1, y: 5 }}
+        whileTap={{ scale: 0.95 }}
         onClick={scrollToProjects}
-        className="absolute bottom-8 sm:bottom-10 left-1/2 transform -translate-x-1/2 bg-black/20 backdrop-blur-sm hover:bg-black/30 text-white/80 rounded-full p-3 sm:p-4 shadow-lg z-20 min-h-[50px] min-w-[50px] hidden sm:flex items-center justify-center"
+        className="absolute bottom-8 sm:bottom-10 left-1/2 transform -translate-x-1/2 bg-blue-500/70 hover:bg-blue-500/90 text-white rounded-full p-4 shadow-lg z-40 min-h-[60px] min-w-[60px] hidden sm:flex items-center justify-center"
         aria-label="Scroll down to browse properties"
       >
-        <ChevronDown size={24} strokeWidth={2} className="animate-bounce" />
-        </motion.button>
+        <ChevronDown size={28} strokeWidth={2} className="animate-bounce" />
+      </motion.button>
 
       {/* Add global styles for hiding scrollbars while preserving functionality */}
       <style dangerouslySetInnerHTML={{__html: `
