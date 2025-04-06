@@ -412,13 +412,13 @@ const Hero: React.FC<HeroProps> = ({ setCurrentPage }) => {
       {/* Slide images with 3D perspective */}
       <div ref={slidesRef} className="absolute inset-0 overflow-hidden" style={{ perspective: '1200px' }}>
         <AnimatePresence initial={false} mode="sync" custom={direction}>
-          <motion.div
+        <motion.div 
             key={`slide-${currentSlide}`}
-            custom={direction}
-            variants={slideVariants}
+          custom={direction}
+          variants={slideVariants}
             initial="initial"
             animate="enter"
-            exit="exit"
+          exit="exit"
             className="absolute inset-0"
             style={{ transformStyle: 'preserve-3d' }}
           >
@@ -427,18 +427,18 @@ const Hero: React.FC<HeroProps> = ({ setCurrentPage }) => {
               src={getResponsiveImageUrl(currentSlide)} 
               alt={`Luxury Real Estate Property: ${slideTitles[currentSlide]}`}
               className="w-full h-full object-cover"
-              loading="eager"
+            loading="eager"
               fetchPriority="high"
               decoding="async"
-            />
-          </motion.div>
-        </AnimatePresence>
+          />
+        </motion.div>
+      </AnimatePresence>
       </div>
 
       {/* Slide content with staggered animations */}
       <div className="absolute inset-0 z-20 flex flex-col justify-center max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <AnimatePresence mode="wait" custom={direction}>
-          <motion.div 
+        <motion.div 
             key={`content-${currentSlide}`} 
             className="py-8 sm:py-12 md:py-0 my-auto"
             variants={contentVariants}
@@ -446,42 +446,42 @@ const Hero: React.FC<HeroProps> = ({ setCurrentPage }) => {
             initial="initial"
             animate="enter"
             exit="exit"
-          >
-            <motion.h1
+        >
+          <motion.h1 
               variants={childVariants}
               className="text-white text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-light tracking-tight mb-3 sm:mb-4 max-w-3xl leading-tight"
             >
               {slideTitles[currentSlide]}
-            </motion.h1>
-            <motion.p
+          </motion.h1>
+          <motion.p 
               variants={childVariants}
               className="text-white/90 text-base sm:text-lg md:text-xl font-light mb-8 max-w-xl leading-relaxed"
             >
               {slideSubtitles[currentSlide]}
-            </motion.p>
-            <motion.div
+          </motion.p>
+          <motion.div 
               variants={childVariants}
               className="flex flex-col sm:flex-row gap-4"
-            >
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+          >
+            <motion.button 
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
                 onClick={() => setCurrentPage('projects')}
                 className="px-6 sm:px-8 py-4 min-h-[44px] min-w-[120px] bg-white text-black text-sm sm:text-base font-medium rounded-full 
                          hover:bg-white/90 transition-all duration-300 flex items-center justify-center"
-              >
+            >
                 View Properties <ArrowRight className="ml-2 w-4 h-4" />
-              </motion.button>
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+            </motion.button>
+            <motion.button 
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
                 className="px-6 sm:px-8 py-4 min-h-[44px] min-w-[120px] bg-transparent border border-white text-white text-sm sm:text-base font-medium rounded-full 
                          hover:bg-white/10 transition-all duration-300 flex items-center justify-center"
-              >
+            >
                 Learn More <ArrowRight className="ml-2 w-4 h-4" />
-              </motion.button>
-            </motion.div>
+            </motion.button>
           </motion.div>
+        </motion.div>
         </AnimatePresence>
       </div>
 
@@ -508,8 +508,8 @@ const Hero: React.FC<HeroProps> = ({ setCurrentPage }) => {
         
         {/* Navigation buttons - visible on all devices */}
         <div className="flex space-x-2 sm:space-x-4">
-          <motion.button
-            whileHover={{ scale: 1.1 }}
+        <motion.button
+          whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             onClick={handlePrev}
             className="w-9 h-9 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-full bg-black/20 backdrop-blur-sm border border-white/20 
@@ -557,7 +557,7 @@ const Hero: React.FC<HeroProps> = ({ setCurrentPage }) => {
         aria-label="Scroll down to browse properties"
       >
         <ChevronDown size={24} strokeWidth={2} className="animate-bounce" />
-      </motion.button>
+        </motion.button>
 
       {/* Add global styles for hiding scrollbars while preserving functionality */}
       <style dangerouslySetInnerHTML={{__html: `
