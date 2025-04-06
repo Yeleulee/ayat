@@ -398,8 +398,8 @@ const Hero: React.FC<HeroProps> = ({ setCurrentPage }) => {
         </AnimatePresence>
       </div>
 
-      {/* Slide navigation with dots for all images - Adjusted for better positioning */}
-      <div className="absolute bottom-6 sm:bottom-12 left-0 right-0 z-30 flex justify-between items-center px-4 sm:px-6 md:px-12 lg:px-16 max-w-7xl mx-auto">
+      {/* Slide navigation with dots for all images - Hidden on small mobile devices */}
+      <div className="absolute bottom-6 sm:bottom-12 left-0 right-0 z-30 hidden sm:flex justify-between items-center px-4 sm:px-6 md:px-12 lg:px-16 max-w-7xl mx-auto">
         {/* Dot navigation - mobile-optimized with fewer, more transparent dots */}
         <div className={`flex items-center nav-dots ${isTouchDevice ? 'overflow-x-auto pb-2 hide-scrollbar' : 'space-x-1 sm:space-x-2'}`}>
           {slideImages.slice(0, isTouchDevice ? 5 : slideImages.length).map((_, index) => (
@@ -444,14 +444,14 @@ const Hero: React.FC<HeroProps> = ({ setCurrentPage }) => {
         </div>
       </div>
 
-      {/* Scroll down button with animation and improved tap target - more transparent */}
+      {/* Scroll down button with animation and improved tap target - more transparent and hidden on small mobile */}
       <motion.button
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 0.5, y: 0 }}
         transition={{ delay: 1, duration: 0.8 }}
         whileHover={{ opacity: 0.8, y: 5 }}
         onClick={scrollToProjects}
-        className="absolute bottom-8 sm:bottom-10 left-1/2 transform -translate-x-1/2 bg-black/10 backdrop-blur-sm hover:bg-black/20 text-white/70 rounded-full p-3 sm:p-4 shadow-lg z-20 min-h-[50px] min-w-[50px] flex items-center justify-center"
+        className="absolute bottom-8 sm:bottom-10 left-1/2 transform -translate-x-1/2 bg-black/10 backdrop-blur-sm hover:bg-black/20 text-white/70 rounded-full p-3 sm:p-4 shadow-lg z-20 min-h-[50px] min-w-[50px] hidden sm:flex items-center justify-center"
         aria-label="Scroll down to browse properties"
       >
         <ChevronDown size={24} strokeWidth={2} className="animate-bounce" />
