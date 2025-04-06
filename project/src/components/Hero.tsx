@@ -193,7 +193,7 @@ const Hero: React.FC<HeroProps> = ({ setCurrentPage }) => {
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 768) {
-        setSlideHeight('85vh'); // Shorter on mobile
+        setSlideHeight('90vh'); // Better height for mobile
       } else {
         setSlideHeight('100vh');
       }
@@ -215,15 +215,26 @@ const Hero: React.FC<HeroProps> = ({ setCurrentPage }) => {
     return () => clearTimeout(timer);
   }, [currentSlide, slideImages.length, loaded]);
 
-  // Mark slides as loaded
+  // Mobile-specific preloading for current slide image
   useEffect(() => {
-    setLoaded(true);
-  }, []);
+    if (isTouchDevice) {
+      const img = new Image();
+      img.src = getResponsiveImageUrl(currentSlide);
+      img.onload = () => setLoaded(true);
+    }
+  }, [currentSlide, isTouchDevice]);
 
   // Detect touch devices
   useEffect(() => {
     setIsTouchDevice('ontouchstart' in window || navigator.maxTouchPoints > 0);
   }, []);
+
+  // Mark slides as loaded for non-touch devices
+  useEffect(() => {
+    if (!isTouchDevice) {
+      setLoaded(true);
+    }
+  }, [isTouchDevice]);
 
   const handleNext = () => {
     setCurrentSlide((prevSlide) => (prevSlide + 1) % slideImages.length);
@@ -268,9 +279,31 @@ const Hero: React.FC<HeroProps> = ({ setCurrentPage }) => {
     exit: { opacity: 0, y: -20, transition: { duration: 0.6 } }
   };
 
+  // Add smooth scroll function for the down arrow
+  const scrollToProjects = () => {
+    // Try to find the projects section first
+    const projectsSection = document.getElementById('projects-section');
+    
+    if (projectsSection) {
+      // Smooth scroll to the projects section if it exists
+      projectsSection.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      // Otherwise navigate to projects page
+      setCurrentPage('projects');
+      
+      // Add a small delay and then scroll down a bit
+      setTimeout(() => {
+        window.scrollTo({
+          top: window.innerHeight * 0.9,
+          behavior: 'smooth'
+        });
+      }, 100);
+    }
+  };
+
   return (
     <div 
-      className="relative h-screen bg-gray-900 overflow-hidden"
+      className="relative bg-gray-900 overflow-hidden w-full"
       style={{ height: slideHeight }}
     >
       {/* Hide scrollbar */}
@@ -280,6 +313,11 @@ const Hero: React.FC<HeroProps> = ({ setCurrentPage }) => {
         }
         body::-webkit-scrollbar {
           display: none;
+        }
+        @media (max-width: 640px) {
+          .nav-dots button {
+            margin: 0 3px;
+          }
         }
       `}} />
       
@@ -306,17 +344,17 @@ const Hero: React.FC<HeroProps> = ({ setCurrentPage }) => {
         </AnimatePresence>
       </div>
 
-      {/* Slide content */}
-      <div className="absolute inset-0 z-20 flex flex-col justify-center max-w-7xl mx-auto px-6 sm:px-12 lg:px-16">
+      {/* Slide content - improved mobile styling */}
+      <div className="absolute inset-0 z-20 flex flex-col justify-center max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <AnimatePresence mode="wait">
-          <div key={`content-${currentSlide}`} className="py-12 md:py-0 my-auto">
+          <div key={`content-${currentSlide}`} className="py-8 sm:py-12 md:py-0 my-auto">
             <motion.h1
               custom={0}
               variants={contentVariants}
               initial="initial"
               animate="enter"
               exit="exit"
-              className="text-white text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light tracking-tight mb-4 max-w-3xl leading-tight"
+              className="text-white text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-light tracking-tight mb-3 sm:mb-4 max-w-3xl leading-tight"
             >
               {slideTitles[currentSlide]}
             </motion.h1>
@@ -363,7 +401,7 @@ const Hero: React.FC<HeroProps> = ({ setCurrentPage }) => {
       {/* Slide navigation with dots for all images - Adjusted for better positioning */}
       <div className="absolute bottom-6 sm:bottom-12 left-0 right-0 z-30 flex justify-between items-center px-4 sm:px-6 md:px-12 lg:px-16 max-w-7xl mx-auto">
         {/* Dot navigation - limited on mobile, scrollable container on desktop */}
-        <div className={`flex items-center ${isTouchDevice ? 'overflow-x-auto pb-2 hide-scrollbar' : 'space-x-1 sm:space-x-2'}`}>
+        <div className={`flex items-center nav-dots ${isTouchDevice ? 'overflow-x-auto pb-2 hide-scrollbar' : 'space-x-1 sm:space-x-2'}`}>
           {slideImages.slice(0, isTouchDevice ? 10 : slideImages.length).map((_, index) => (
             <button
               key={`dot-${index}`}
@@ -412,7 +450,7 @@ const Hero: React.FC<HeroProps> = ({ setCurrentPage }) => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 1, duration: 0.8 }}
         whileHover={{ y: 5 }}
-        onClick={() => setCurrentPage('projects')}
+        onClick={scrollToProjects}
         className="absolute bottom-8 sm:bottom-10 left-1/2 transform -translate-x-1/2 bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white rounded-full p-3 sm:p-4 shadow-lg z-20 min-h-[50px] min-w-[50px] flex items-center justify-center"
         aria-label="Scroll down to browse properties"
       >

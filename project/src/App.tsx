@@ -42,7 +42,7 @@ function App() {
         </>
       ) : (
         // Projects page content
-        <div id="properties">
+        <div id="projects-section">
           <ProjectsPage />
         </div>
       )}
