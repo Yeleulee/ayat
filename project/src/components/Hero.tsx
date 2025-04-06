@@ -217,43 +217,61 @@ const Hero: React.FC<HeroProps> = ({ setCurrentPage }) => {
 
   // Mobile-specific preloading for current slide image
   useEffect(() => {
-    if (isTouchDevice) {
-      const img = new Image();
-      img.src = getResponsiveImageUrl(currentSlide);
-      img.onload = () => setLoaded(true);
-    }
-  }, [currentSlide, isTouchDevice]);
-
+    // Preload current slide and next slide for smoother transitions
+    const preloadImages = (indexes: number[]) => {
+      indexes.forEach(index => {
+        if (index >= 0 && index < slideImages.length) {
+          const img = new Image();
+          img.src = getResponsiveImageUrl(index);
+          // Force high quality loading
+          img.setAttribute('fetchpriority', 'high');
+          img.onload = () => {
+            if (index === currentSlide) setLoaded(true);
+          };
+        }
+      });
+    };
+    
+    // Preload current, next and previous slides for smoother navigation
+    const nextSlide = (currentSlide + 1) % slideImages.length;
+    const prevSlide = currentSlide === 0 ? slideImages.length - 1 : currentSlide - 1;
+    preloadImages([currentSlide, nextSlide, prevSlide]);
+    
+  }, [currentSlide, slideImages.length]);
+  
   // Detect touch devices
   useEffect(() => {
     setIsTouchDevice('ontouchstart' in window || navigator.maxTouchPoints > 0);
   }, []);
 
-  // Mark slides as loaded for non-touch devices
-  useEffect(() => {
-    if (!isTouchDevice) {
-      setLoaded(true);
-    }
-  }, [isTouchDevice]);
-
+  // Enhance slide navigation functions with immediate feedback
   const handleNext = () => {
+    // Temporarily set loaded to false to trigger preloading
+    setLoaded(false);
+    // Advance to the next slide
     setCurrentSlide((prevSlide) => (prevSlide + 1) % slideImages.length);
   };
 
   const handlePrev = () => {
+    // Temporarily set loaded to false to trigger preloading
+    setLoaded(false);
+    // Go back to the previous slide
     setCurrentSlide((prevSlide) => 
       prevSlide === 0 ? slideImages.length - 1 : prevSlide - 1
     );
   };
 
-  // Generate appropriate image URL based on screen width
+  // Generate appropriate image URL based on screen width with highest quality
   const getResponsiveImageUrl = (index: number) => {
     const imageSet = slideImages[index];
     if (typeof window !== 'undefined') {
       const width = window.innerWidth;
-      if (width < 640) return imageSet.mobile;
-      if (width < 1024) return imageSet.tablet;
-      return imageSet.desktop;
+      const dpr = window.devicePixelRatio || 1;
+      
+      // Adjust for device pixel ratio to ensure crisp images on high-DPI screens
+      if (width < 640) return imageSet.mobile.replace('q=100', 'q=100&dpr=' + dpr);
+      if (width < 1024) return imageSet.tablet.replace('q=100', 'q=100&dpr=' + dpr);
+      return imageSet.desktop.replace('q=100', 'q=100&dpr=' + dpr);
     }
     return imageSet.desktop; // Default for SSR
   };
@@ -329,7 +347,7 @@ const Hero: React.FC<HeroProps> = ({ setCurrentPage }) => {
       
       {/* Slide images */}
       <div ref={slidesRef} className="absolute inset-0">
-        <AnimatePresence initial={false}>
+        <AnimatePresence initial={false} mode="sync">
           <motion.div
             key={`slide-${currentSlide}`}
             variants={slideVariants}
@@ -343,8 +361,9 @@ const Hero: React.FC<HeroProps> = ({ setCurrentPage }) => {
               src={getResponsiveImageUrl(currentSlide)} 
               alt={`Luxury Real Estate Property: ${slideTitles[currentSlide]}`}
               className="w-full h-full object-cover"
-              loading={currentSlide === 0 ? "eager" : "lazy"}
-              fetchPriority={currentSlide === 0 ? "high" : "auto"}
+              loading="eager"
+              fetchPriority="high"
+              decoding="async"
             />
           </motion.div>
         </AnimatePresence>
@@ -404,8 +423,8 @@ const Hero: React.FC<HeroProps> = ({ setCurrentPage }) => {
         </AnimatePresence>
       </div>
 
-      {/* Slide navigation with dots for all images - Hidden on small mobile devices */}
-      <div className="absolute bottom-6 sm:bottom-12 left-0 right-0 z-30 hidden sm:flex justify-between items-center px-4 sm:px-6 md:px-12 lg:px-16 max-w-7xl mx-auto">
+      {/* Slide navigation with dots for all images - Show on all devices */}
+      <div className="absolute bottom-6 sm:bottom-12 left-0 right-0 z-30 flex justify-between items-center px-4 sm:px-6 md:px-12 lg:px-16 max-w-7xl mx-auto">
         {/* Dot navigation - mobile-optimized with fewer, more transparent dots */}
         <div className={`flex items-center nav-dots ${isTouchDevice ? 'overflow-x-auto pb-2 hide-scrollbar' : 'space-x-1 sm:space-x-2'}`}>
           {slideImages.slice(0, isTouchDevice ? 5 : slideImages.length).map((_, index) => (
@@ -425,27 +444,27 @@ const Hero: React.FC<HeroProps> = ({ setCurrentPage }) => {
           )}
         </div>
         
-        {/* Navigation buttons - increased size for touch friendliness and more transparent */}
+        {/* Navigation buttons - visible on all devices */}
         <div className="flex space-x-2 sm:space-x-4">
           <motion.button
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             onClick={handlePrev}
-            className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-black/10 backdrop-blur-sm border border-white/10 
-                     flex items-center justify-center text-white/70 hover:bg-black/20 transition-colors"
+            className="w-9 h-9 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-full bg-black/20 backdrop-blur-sm border border-white/20 
+                     flex items-center justify-center text-white/80 hover:bg-black/30 transition-colors"
             aria-label="Previous slide"
           >
-            <ChevronLeft className="w-4 h-4 sm:w-6 sm:h-6" />
+            <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
           </motion.button>
           <motion.button
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             onClick={handleNext}
-            className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-black/10 backdrop-blur-sm border border-white/10 
-                     flex items-center justify-center text-white/70 hover:bg-black/20 transition-colors"
+            className="w-9 h-9 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-full bg-black/20 backdrop-blur-sm border border-white/20 
+                     flex items-center justify-center text-white/80 hover:bg-black/30 transition-colors"
             aria-label="Next slide"
           >
-            <ChevronRight className="w-4 h-4 sm:w-6 sm:h-6" />
+            <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
           </motion.button>
         </div>
       </div>
@@ -454,12 +473,12 @@ const Hero: React.FC<HeroProps> = ({ setCurrentPage }) => {
       {/* Mobile version - simplified and repositioned */}
       <motion.button
         initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 0.6, y: 0 }}
+        animate={{ opacity: 0.7, y: 0 }}
         transition={{ delay: 1, duration: 0.8 }}
         whileHover={{ opacity: 0.9 }}
         whileTap={{ scale: 0.95 }}
         onClick={scrollToProjects}
-        className="sm:hidden absolute bottom-4 left-1/2 transform -translate-x-1/2 z-40 bg-black/30 text-white/80 rounded-full p-2 shadow-lg flex items-center justify-center w-9 h-9"
+        className="sm:hidden absolute bottom-4 left-1/2 transform -translate-x-1/2 z-40 bg-black/30 text-white/90 rounded-full p-2 shadow-lg flex items-center justify-center w-9 h-9"
         aria-label="Scroll to properties"
       >
         <ChevronDown size={18} strokeWidth={2.5} className="animate-bounce" />
@@ -468,11 +487,11 @@ const Hero: React.FC<HeroProps> = ({ setCurrentPage }) => {
       {/* Desktop version */}
       <motion.button
         initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 0.5, y: 0 }}
+        animate={{ opacity: 0.6, y: 0 }}
         transition={{ delay: 1, duration: 0.8 }}
         whileHover={{ opacity: 0.8, y: 5 }}
         onClick={scrollToProjects}
-        className="absolute bottom-8 sm:bottom-10 left-1/2 transform -translate-x-1/2 bg-black/10 backdrop-blur-sm hover:bg-black/20 text-white/70 rounded-full p-3 sm:p-4 shadow-lg z-20 min-h-[50px] min-w-[50px] hidden sm:flex items-center justify-center"
+        className="absolute bottom-8 sm:bottom-10 left-1/2 transform -translate-x-1/2 bg-black/20 backdrop-blur-sm hover:bg-black/30 text-white/80 rounded-full p-3 sm:p-4 shadow-lg z-20 min-h-[50px] min-w-[50px] hidden sm:flex items-center justify-center"
         aria-label="Scroll down to browse properties"
       >
         <ChevronDown size={24} strokeWidth={2} className="animate-bounce" />
