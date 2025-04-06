@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useMemo, useRef, lazy, Suspense } from 'react';
 import { motion, AnimatePresence, useAnimation, Variants } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { Search, Sliders, X, Map, Bed, Bath, Square, CheckCircle2, ArrowDown, ArrowUp, Heart, Building2 } from 'lucide-react';
@@ -53,7 +53,29 @@ const ProjectsPage: React.FC = () => {
   // Check if device is mobile for optimization
   const [isMobile, setIsMobile] = useState(false);
 
-  // Property data with high-quality images from Unsplash/Pexels
+  // Add state for image loading
+  const [loadedImages, setLoadedImages] = useState<Record<number, boolean>>({});
+  
+  // Handle image load
+  const handleImageLoad = (id: number) => {
+    setLoadedImages(prev => ({...prev, [id]: true}));
+  };
+  
+  // Handle image error (use backup image)
+  const handleImageError = (id: number) => {
+    console.error(`Failed to load image for property ID: ${id}`);
+    // Mark as loaded anyway to remove loading state
+    setLoadedImages(prev => ({...prev, [id]: true}));
+    
+    // Try to find the image element and apply fallback
+    const imgElement = document.querySelector(`[data-property-id="${id}"]`) as HTMLImageElement;
+    if (imgElement) {
+      // Use a reliable fallback image if the original fails
+      imgElement.src = "https://images.unsplash.com/photo-1600585152220-90363fe7e115?auto=format&q=80&w=1080";
+    }
+  };
+
+  // Property data with unique high-quality images from Unsplash
   const properties: Property[] = [
     {
       id: 1,
@@ -65,7 +87,7 @@ const ProjectsPage: React.FC = () => {
       area: 140,
       location: "Bole, Addis Ababa",
       description: "Elegant apartment with premium finishes, overlooking the city with breathtaking views.",
-      image: "https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg",
+      image: "https://images.unsplash.com/photo-1560184897-ae75f418493e?auto=format&q=80&w=1080",
       featured: true
     },
     {
@@ -78,7 +100,7 @@ const ProjectsPage: React.FC = () => {
       area: 210,
       location: "Kazanchis, Addis Ababa",
       description: "Luxurious penthouse with panoramic views, private terrace, and premium amenities.",
-      image: "https://images.pexels.com/photos/1732414/pexels-photo-1732414.jpeg",
+      image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&q=80&w=1080",
       featured: true
     },
     {
@@ -91,7 +113,7 @@ const ProjectsPage: React.FC = () => {
       area: 350,
       location: "CMC, Addis Ababa",
       description: "Spacious villa with lush gardens, private pool, and modern design elements.",
-      image: "https://images.pexels.com/photos/1396132/pexels-photo-1396132.jpeg",
+      image: "https://images.unsplash.com/photo-1600566753376-12c8ab8e546f?auto=format&q=80&w=1080",
       featured: false
     },
     {
@@ -104,7 +126,7 @@ const ProjectsPage: React.FC = () => {
       area: 160,
       location: "Gerji, Addis Ababa",
       description: "Contemporary townhouse with smart home features and energy-efficient design.",
-      image: "https://images.pexels.com/photos/1029599/pexels-photo-1029599.jpeg",
+      image: "https://images.unsplash.com/photo-1600585152220-90363fe7e115?auto=format&q=80&w=1920",
       featured: false
     },
     {
@@ -117,7 +139,7 @@ const ProjectsPage: React.FC = () => {
       area: 120,
       location: "Bole, Addis Ababa",
       description: "Boutique apartment with designer interiors and exclusive community amenities.",
-      image: "https://images.pexels.com/photos/2102587/pexels-photo-2102587.jpeg",
+      image: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&q=80&w=1080",
       featured: true
     },
     {
@@ -130,7 +152,7 @@ const ProjectsPage: React.FC = () => {
       area: 450,
       location: "Old Airport, Addis Ababa",
       description: "Prestigious villa with architectural excellence, home theater, and wine cellar.",
-      image: "https://images.pexels.com/photos/2724749/pexels-photo-2724749.jpeg",
+      image: "https://images.unsplash.com/photo-1613977257592-4871e5fcd7c4?auto=format&q=80&w=1080",
       featured: true
     },
     {
@@ -143,7 +165,7 @@ const ProjectsPage: React.FC = () => {
       area: 85,
       location: "Piassa, Addis Ababa",
       description: "Modern loft apartment with industrial chic design in the heart of the city.",
-      image: "https://images.pexels.com/photos/2121121/pexels-photo-2121121.jpeg",
+      image: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&q=80&w=1080",
       featured: false
     },
     {
@@ -156,7 +178,7 @@ const ProjectsPage: React.FC = () => {
       area: 190,
       location: "Bole, Addis Ababa",
       description: "Corner penthouse with floor-to-ceiling windows and custom Italian furnishings.",
-      image: "https://images.pexels.com/photos/1571468/pexels-photo-1571468.jpeg",
+      image: "https://images.unsplash.com/photo-1560185007-cde436f6a4d0?auto=format&q=80&w=1080",
       featured: false
     },
     {
@@ -169,7 +191,7 @@ const ProjectsPage: React.FC = () => {
       area: 175,
       location: "CMC, Addis Ababa",
       description: "Family townhouse adjacent to city park with private garden and outdoor kitchen.",
-      image: "https://images.pexels.com/photos/1438834/pexels-photo-1438834.jpeg",
+      image: "https://images.unsplash.com/photo-1605146768851-eda79da34897?auto=format&q=80&w=1080",
       featured: false
     },
     {
@@ -182,7 +204,7 @@ const ProjectsPage: React.FC = () => {
       area: 165,
       location: "Bole, Addis Ababa",
       description: "Luxurious apartment with high ceilings, smart home integration, and panoramic views of the city.",
-      image: "https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg",
+      image: "https://images.unsplash.com/photo-1598228723793-52759bba239c?auto=format&q=80&w=1080",
       featured: true
     },
     {
@@ -195,7 +217,7 @@ const ProjectsPage: React.FC = () => {
       area: 410,
       location: "Old Airport, Addis Ababa",
       description: "Grand villa with crystal chandeliers, marble flooring, and expansive entertaining spaces.",
-      image: "https://images.pexels.com/photos/1396132/pexels-photo-1396132.jpeg",
+      image: "https://images.unsplash.com/photo-1600566752355-35792bedcfea?auto=format&q=80&w=1080",
       featured: false
     },
     {
@@ -208,7 +230,7 @@ const ProjectsPage: React.FC = () => {
       area: 120,
       location: "Mexico, Addis Ababa",
       description: "Urban-inspired apartments with efficient layouts and proximity to transit and shopping.",
-      image: "https://images.pexels.com/photos/1643384/pexels-photo-1643384.jpeg",
+      image: "https://images.unsplash.com/photo-1567684014761-b65e2e59b9eb?auto=format&q=80&w=1080",
       featured: false
     },
     {
@@ -221,7 +243,7 @@ const ProjectsPage: React.FC = () => {
       area: 220,
       location: "Kazanchis, Addis Ababa",
       description: "Multi-level penthouse with cascading terraces, jacuzzi, and 360-degree views.",
-      image: "https://images.pexels.com/photos/323780/pexels-photo-323780.jpeg",
+      image: "https://images.unsplash.com/photo-1565623833408-d77e39b88af6?auto=format&q=80&w=1080",
       featured: true
     },
     {
@@ -234,7 +256,7 @@ const ProjectsPage: React.FC = () => {
       area: 180,
       location: "CMC, Addis Ababa",
       description: "Warm, inviting townhouse with hardwood details and mature landscaping.",
-      image: "https://images.pexels.com/photos/1029599/pexels-photo-1029599.jpeg",
+      image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&q=80&w=1080",
       featured: false
     },
     {
@@ -247,7 +269,7 @@ const ProjectsPage: React.FC = () => {
       area: 145,
       location: "Bole, Addis Ababa",
       description: "Corner apartment with wrap-around balcony and custom-designed interiors.",
-      image: "https://images.pexels.com/photos/1571463/pexels-photo-1571463.jpeg",
+      image: "https://images.unsplash.com/photo-1600573472556-e636c2acda88?auto=format&q=80&w=1080",
       featured: false
     },
     {
@@ -260,7 +282,7 @@ const ProjectsPage: React.FC = () => {
       area: 480,
       location: "Old Airport, Addis Ababa",
       description: "Diplomatic-style villa with security features, staff quarters, and formal gardens.",
-      image: "https://images.pexels.com/photos/2581922/pexels-photo-2581922.jpeg",
+      image: "https://images.unsplash.com/photo-1602343168117-bb8a12d7bc36?auto=format&q=80&w=1080",
       featured: true
     },
     {
@@ -273,7 +295,7 @@ const ProjectsPage: React.FC = () => {
       area: 90,
       location: "Piassa, Addis Ababa",
       description: "Geometric-inspired lofts with modular furniture and innovative storage solutions.",
-      image: "https://images.pexels.com/photos/2121121/pexels-photo-2121121.jpeg",
+      image: "https://images.unsplash.com/photo-1588854337236-6889d631faa8?auto=format&q=80&w=1080",
       featured: false
     },
     {
@@ -286,7 +308,7 @@ const ProjectsPage: React.FC = () => {
       area: 240,
       location: "Bole, Addis Ababa",
       description: "Penthouse oasis with rooftop vegetation, outdoor kitchen, and private elevator access.",
-      image: "https://images.pexels.com/photos/1571468/pexels-photo-1571468.jpeg",
+      image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&q=80&w=1080",
       featured: false
     },
     {
@@ -299,7 +321,7 @@ const ProjectsPage: React.FC = () => {
       area: 195,
       location: "CMC, Addis Ababa",
       description: "Multi-level terraced townhouse with direct park access and underground parking.",
-      image: "https://images.pexels.com/photos/1438834/pexels-photo-1438834.jpeg",
+      image: "https://images.unsplash.com/photo-1523217582562-09d0def993a6?auto=format&q=80&w=1080",
       featured: false
     },
     {
@@ -312,7 +334,7 @@ const ProjectsPage: React.FC = () => {
       area: 160,
       location: "Kazanchis, Addis Ababa",
       description: "Premium high-rise apartment with concierge service and exclusive resident amenities.",
-      image: "https://images.pexels.com/photos/2635038/pexels-photo-2635038.jpeg",
+      image: "https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&q=80&w=1080",
       featured: true
     },
     {
@@ -325,7 +347,7 @@ const ProjectsPage: React.FC = () => {
       area: 440,
       location: "Entoto, Addis Ababa",
       description: "Mediterranean-inspired villa with wine cellar, tasting room, and olive garden.",
-      image: "https://images.pexels.com/photos/2980955/pexels-photo-2980955.jpeg",
+      image: "https://images.unsplash.com/photo-1600573472556-e636c2acda88?auto=format&q=80&w=1080",
       featured: false
     },
     {
@@ -338,7 +360,7 @@ const ProjectsPage: React.FC = () => {
       area: 105,
       location: "Mexico, Addis Ababa",
       description: "Sleek, minimalist design with essential luxury features and clean aesthetic.",
-      image: "https://images.pexels.com/photos/1669799/pexels-photo-1669799.jpeg",
+      image: "https://images.unsplash.com/photo-1493809842364-78817add7ffb?auto=format&q=80&w=1080",
       featured: false
     },
     {
@@ -351,7 +373,7 @@ const ProjectsPage: React.FC = () => {
       area: 260,
       location: "Kazanchis, Addis Ababa",
       description: "Opulent penthouse with astronomically-inspired design, observatory, and smart lighting.",
-      image: "https://images.pexels.com/photos/2102587/pexels-photo-2102587.jpeg",
+      image: "https://images.unsplash.com/photo-1486304873000-235643847519?auto=format&q=80&w=1080",
       featured: true
     },
     {
@@ -364,7 +386,7 @@ const ProjectsPage: React.FC = () => {
       area: 175,
       location: "Ayat, Addis Ababa",
       description: "Contemporary townhouse with stone accents, riverside location, and private dock.",
-      image: "https://images.pexels.com/photos/2119713/pexels-photo-2119713.jpeg",
+      image: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&q=80&w=1080",
       featured: false
     },
     {
@@ -377,7 +399,7 @@ const ProjectsPage: React.FC = () => {
       area: 130,
       location: "Bole, Addis Ababa",
       description: "Tranquil apartment with wellness features including yoga space and meditation garden.",
-      image: "https://images.pexels.com/photos/1643383/pexels-photo-1643383.jpeg",
+      image: "https://images.unsplash.com/photo-1560448205-4d9b3e6bb6db?auto=format&q=80&w=1080",
       featured: false
     },
     {
@@ -390,7 +412,7 @@ const ProjectsPage: React.FC = () => {
       area: 550,
       location: "Old Airport, Addis Ababa",
       description: "Historic-style mansion with modern amenities, grand staircase, and formal ballroom.",
-      image: "https://images.pexels.com/photos/1732414/pexels-photo-1732414.jpeg",
+      image: "https://images.unsplash.com/photo-1600047509358-9dc75507daeb?auto=format&q=80&w=1080",
       featured: true
     },
     {
@@ -403,7 +425,7 @@ const ProjectsPage: React.FC = () => {
       area: 95,
       location: "Piassa, Addis Ababa",
       description: "Creative space with abundant natural light, high ceilings, and gallery wall system.",
-      image: "https://images.pexels.com/photos/2251247/pexels-photo-2251247.jpeg",
+      image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&q=80&w=1080",
       featured: false
     },
     {
@@ -416,7 +438,7 @@ const ProjectsPage: React.FC = () => {
       area: 230,
       location: "Bole, Addis Ababa",
       description: "Arc-shaped penthouse with dramatic curved windows and bespoke furniture throughout.",
-      image: "https://images.pexels.com/photos/1643384/pexels-photo-1643384.jpeg",
+      image: "https://images.unsplash.com/photo-1600210492493-0946911123ea?auto=format&q=80&w=1080",
       featured: false
     },
     {
@@ -429,7 +451,7 @@ const ProjectsPage: React.FC = () => {
       area: 165,
       location: "Gerji, Addis Ababa",
       description: "Warm, inviting townhouse with maple finishes, fireplaces, and reading nooks.",
-      image: "https://images.pexels.com/photos/1029599/pexels-photo-1029599.jpeg",
+      image: "https://images.unsplash.com/photo-1558036117-15d82a90b9b1?auto=format&q=80&w=1080",
       featured: false
     },
     {
@@ -442,7 +464,7 @@ const ProjectsPage: React.FC = () => {
       area: 155,
       location: "Kazanchis, Addis Ababa",
       description: "Contemporary glass-walled apartment with sliding partitions and versatile living areas.",
-      image: "https://images.pexels.com/photos/276724/pexels-photo-276724.jpeg",
+      image: "https://images.unsplash.com/photo-1560448204-603b3fc33ddc?auto=format&q=80&w=1080",
       featured: false
     },
     {
@@ -455,7 +477,7 @@ const ProjectsPage: React.FC = () => {
       area: 620,
       location: "Entoto, Addis Ababa",
       description: "Magnificent country estate with stables, riding arena, and expansive grounds.",
-      image: "https://images.pexels.com/photos/2724749/pexels-photo-2724749.jpeg",
+      image: "https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?auto=format&q=80&w=1080",
       featured: true
     },
     {
@@ -468,7 +490,7 @@ const ProjectsPage: React.FC = () => {
       area: 115,
       location: "Jemo, Addis Ababa",
       description: "Cutting-edge smart apartment with voice-controlled systems and energy efficiency.",
-      image: "https://images.pexels.com/photos/1669799/pexels-photo-1669799.jpeg",
+      image: "https://images.unsplash.com/photo-1620626011581-e7215340d250?auto=format&q=80&w=1080",
       featured: false
     },
     {
@@ -481,7 +503,7 @@ const ProjectsPage: React.FC = () => {
       area: 300,
       location: "Bole, Addis Ababa",
       description: "Regal penthouse with palatial design, imported materials, and staff quarters.",
-      image: "https://images.pexels.com/photos/1643383/pexels-photo-1643383.jpeg",
+      image: "https://images.unsplash.com/photo-1600210491892-03d54c0aaf87?auto=format&q=80&w=1080",
       featured: true
     },
     {
@@ -494,7 +516,7 @@ const ProjectsPage: React.FC = () => {
       area: 160,
       location: "CMC, Addis Ababa",
       description: "Balanced design principles create a harmonious living environment in this modern townhouse.",
-      image: "https://images.pexels.com/photos/2119713/pexels-photo-2119713.jpeg",
+      image: "https://images.unsplash.com/photo-1600585152915-d208bec867a1?auto=format&q=80&w=1080",
       featured: false
     },
     {
@@ -507,7 +529,7 @@ const ProjectsPage: React.FC = () => {
       area: 150,
       location: "Bole, Addis Ababa",
       description: "Upper-floor apartment with floor-to-ceiling windows and breathtaking aerial views.",
-      image: "https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg",
+      image: "https://images.unsplash.com/photo-1515263487990-61b07816b324?auto=format&q=80&w=1080",
       featured: false
     },
     {
@@ -520,7 +542,7 @@ const ProjectsPage: React.FC = () => {
       area: 400,
       location: "Ayat, Addis Ababa",
       description: "Botanical lover's dream with greenhouse, rare plantings, and lush garden rooms.",
-      image: "https://images.pexels.com/photos/2581922/pexels-photo-2581922.jpeg",
+      image: "https://images.unsplash.com/photo-1564501049412-61c2a3083791?auto=format&q=80&w=1080",
       featured: false
     },
     {
@@ -533,7 +555,7 @@ const ProjectsPage: React.FC = () => {
       area: 110,
       location: "Piassa, Addis Ababa",
       description: "Converted factory space with exposed brick, ductwork, and industrial-inspired fixtures.",
-      image: "https://images.pexels.com/photos/2121121/pexels-photo-2121121.jpeg",
+      image: "https://images.unsplash.com/photo-1560448204-61dc36dc98c8?auto=format&q=80&w=1080",
       featured: false
     },
     {
@@ -546,7 +568,7 @@ const ProjectsPage: React.FC = () => {
       area: 250,
       location: "Kazanchis, Addis Ababa",
       description: "Faceted architectural design with crystalline elements, luxe finishes, and private spa.",
-      image: "https://images.pexels.com/photos/1571468/pexels-photo-1571468.jpeg",
+      image: "https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?auto=format&q=80&w=1080",
       featured: true
     },
     {
@@ -559,7 +581,7 @@ const ProjectsPage: React.FC = () => {
       area: 185,
       location: "CMC, Addis Ababa",
       description: "Evergreen-lined townhouse with classic architecture and contemporary interiors.",
-      image: "https://images.pexels.com/photos/1438834/pexels-photo-1438834.jpeg",
+      image: "https://images.unsplash.com/photo-1600563438938-a9a27216b4f5?auto=format&q=80&w=1080",
       featured: false
     },
     {
@@ -572,7 +594,7 @@ const ProjectsPage: React.FC = () => {
       area: 135,
       location: "Bole, Addis Ababa",
       description: "Health-focused apartment with air purification, water filtration, and fitness studio.",
-      image: "https://images.pexels.com/photos/1643383/pexels-photo-1643383.jpeg",
+      image: "https://images.unsplash.com/photo-1572120360610-d971b9d7767c?auto=format&q=80&w=1080",
       featured: false
     },
     {
@@ -585,7 +607,7 @@ const ProjectsPage: React.FC = () => {
       area: 520,
       location: "Old Airport, Addis Ababa",
       description: "Stately villa with formal reception rooms, security features, and diplomatic pedigree.",
-      image: "https://images.pexels.com/photos/2980955/pexels-photo-2980955.jpeg",
+      image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&q=80&w=1080",
       featured: true
     },
     {
@@ -598,7 +620,7 @@ const ProjectsPage: React.FC = () => {
       area: 125,
       location: "Jemo, Addis Ababa",
       description: "Sustainable building with solar power, greywater systems, and eco-friendly materials.",
-      image: "https://images.pexels.com/photos/2635038/pexels-photo-2635038.jpeg",
+      image: "https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&q=80&w=1080",
       featured: false
     },
     {
@@ -611,7 +633,7 @@ const ProjectsPage: React.FC = () => {
       area: 275,
       location: "Bole, Addis Ababa",
       description: "Boundary-pushing design with infinity pool, retractable roof, and smart glass technology.",
-      image: "https://images.pexels.com/photos/1571468/pexels-photo-1571468.jpeg",
+      image: "https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&q=80&w=1080",
       featured: true
     },
     {
@@ -624,7 +646,7 @@ const ProjectsPage: React.FC = () => {
       area: 170,
       location: "Gerji, Addis Ababa",
       description: "Nature-inspired townhouse with wildflower garden, beehives, and organic design elements.",
-      image: "https://images.pexels.com/photos/2119713/pexels-photo-2119713.jpeg",
+      image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&q=80&w=1080",
       featured: false
     },
     {
@@ -637,7 +659,7 @@ const ProjectsPage: React.FC = () => {
       area: 155,
       location: "Kazanchis, Addis Ababa",
       description: "Astronomy-inspired apartment with star-gazing deck, telescope, and celestial themes.",
-      image: "https://images.pexels.com/photos/1571463/pexels-photo-1571463.jpeg",
+      image: "https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&q=80&w=1080",
       featured: false
     },
     {
@@ -650,7 +672,7 @@ const ProjectsPage: React.FC = () => {
       area: 460,
       location: "Summit Area, Addis Ababa",
       description: "Desert-inspired villa with warm tones, courtyard fountain, and temperature-controlled wine room.",
-      image: "https://images.pexels.com/photos/1396132/pexels-photo-1396132.jpeg",
+      image: "https://images.unsplash.com/photo-1613553507747-5f8d62ad5904?auto=format&q=80&w=1080",
       featured: false
     },
     {
@@ -663,7 +685,7 @@ const ProjectsPage: React.FC = () => {
       area: 85,
       location: "Piassa, Addis Ababa",
       description: "Creative live-work space with north-facing windows, built-in easels, and art storage.",
-      image: "https://images.pexels.com/photos/2251247/pexels-photo-2251247.jpeg",
+      image: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&q=80&w=1080",
       featured: false
     },
     {
@@ -676,7 +698,7 @@ const ProjectsPage: React.FC = () => {
       area: 320,
       location: "Bole, Addis Ababa",
       description: "Ultra-luxury penthouse with helicopter access, panic room, and diplomatic-grade security.",
-      image: "https://images.pexels.com/photos/1571468/pexels-photo-1571468.jpeg",
+      image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&q=80&w=1080",
       featured: true
     },
     {
@@ -689,7 +711,7 @@ const ProjectsPage: React.FC = () => {
       area: 180,
       location: "CMC, Addis Ababa",
       description: "Asian-inspired townhouse with bamboo features, zen garden, and minimalist design.",
-      image: "https://images.pexels.com/photos/1438834/pexels-photo-1438834.jpeg",
+      image: "https://images.unsplash.com/photo-1599809275671-b5942cabc7a2?auto=format&q=80&w=1080",
       featured: false
     },
     {
@@ -702,7 +724,7 @@ const ProjectsPage: React.FC = () => {
       area: 380,
       location: "Bole, Addis Ababa",
       description: "The crown jewel of Addis Ababa with 360° views, private elevator, infinity pool, and smart home automation throughout every room.",
-      image: "https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg",
+      image: "https://images.unsplash.com/photo-1600047509358-9dc75507daeb?auto=format&q=80&w=1080",
       featured: true
     },
     {
@@ -715,7 +737,7 @@ const ProjectsPage: React.FC = () => {
       area: 720,
       location: "Old Airport, Addis Ababa",
       description: "Ethiopia's most prestigious estate with marble floors, grand ballroom, private cinema, indoor and outdoor pools, and 24/7 security system.",
-      image: "https://images.pexels.com/photos/2980955/pexels-photo-2980955.jpeg",
+      image: "https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&q=80&w=1080",
       featured: true
     },
     {
@@ -728,7 +750,7 @@ const ProjectsPage: React.FC = () => {
       area: 380,
       location: "Ayat, Addis Ababa",
       description: "Mediterranean-inspired villa set in mature gardens with outdoor entertaining areas and pool.",
-      image: "https://images.pexels.com/photos/1396122/pexels-photo-1396122.jpeg",
+      image: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&q=80&w=1080",
       featured: false
     }
   ];
@@ -912,7 +934,19 @@ const ProjectsPage: React.FC = () => {
   };
 
   // Video background fallback image
-  const headerBgFallback = "https://images.pexels.com/photos/1732414/pexels-photo-1732414.jpeg";
+  const headerBgFallback = "https://images.unsplash.com/photo-1600585152220-90363fe7e115?auto=format&q=80&w=1920";
+
+  // Add preloading for featured properties
+  useEffect(() => {
+    // Preload images for featured properties
+    const featuredProperties = properties.filter(p => p.featured);
+    featuredProperties.forEach(property => {
+      const img = new Image();
+      img.src = property.image;
+      img.onload = () => handleImageLoad(property.id);
+      img.onerror = () => handleImageError(property.id);
+    });
+  }, []);
 
   return (
     <div className="bg-gray-50 py-10 sm:py-16 md:py-20 min-h-screen">
@@ -1290,10 +1324,27 @@ const ProjectsPage: React.FC = () => {
                       transition={{ duration: 0.5 }}
                       className="overflow-hidden"
                     >
+                      {/* Placeholder for image loading */}
+                      <div 
+                        className={`w-full h-64 bg-gray-200 object-cover transition-opacity duration-500 ${loadedImages[property.id] ? 'opacity-0 absolute inset-0' : 'opacity-100'}`}
+                      >
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <svg className="animate-spin h-8 w-8 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                          </svg>
+                        </div>
+                      </div>
+                      
+                      {/* Actual property image with lazy loading */}
                       <img 
                         src={property.image} 
                         alt={property.title}
-                        className="w-full h-64 object-cover transition-transform duration-500"
+                        data-property-id={property.id}
+                        className={`w-full h-64 object-cover transition-opacity duration-500 ${loadedImages[property.id] ? 'opacity-100' : 'opacity-0'}`}
+                        loading="lazy"
+                        onLoad={() => handleImageLoad(property.id)}
+                        onError={() => handleImageError(property.id)}
                       />
                     </motion.div>
                     
@@ -1303,15 +1354,16 @@ const ProjectsPage: React.FC = () => {
                       </div>
                     )}
                     
-                    {/* Favorite Button */}
+                    {/* Favorite Button - increased tap target size */}
                     <motion.button
                       whileHover={{ scale: 1.1 }}
                       whileTap={{ scale: 0.9 }}
                       onClick={() => toggleFavorite(property.id)}
-                      className="absolute top-4 right-4 w-9 h-9 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center shadow-md"
+                      className="absolute top-4 right-4 w-11 h-11 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center shadow-md"
+                      aria-label={favoritedProperties.includes(property.id) ? 'Remove from favorites' : 'Add to favorites'}
                     >
                       <Heart 
-                        size={18} 
+                        size={20} 
                         className={favoritedProperties.includes(property.id) 
                           ? "fill-red-500 text-red-500" 
                           : "text-gray-600"} 
@@ -1330,7 +1382,7 @@ const ProjectsPage: React.FC = () => {
                     <h3 className="text-xl font-bold text-gray-800 mb-1">{property.title}</h3>
                     <div className="flex items-center mb-4 text-gray-600">
                       <Map size={16} className="mr-1 text-blue-500" />
-                      <span className="text-sm">{property.location}</span>
+                      <span className="text-sm line-clamp-1">{property.location}</span>
                     </div>
                     
                     <p className="text-gray-600 mb-6 line-clamp-2">{property.description}</p>
@@ -1358,7 +1410,7 @@ const ProjectsPage: React.FC = () => {
                       initial="rest"
                       whileHover="hover"
                       whileTap="tap"
-                      className="w-full py-3 rounded-xl bg-gradient-to-r from-blue-600 to-blue-400 text-white font-medium shadow-md hover:shadow-lg transition-all duration-300"
+                      className="w-full py-4 min-h-[44px] rounded-xl bg-gradient-to-r from-blue-600 to-blue-400 text-white font-medium shadow-md hover:shadow-lg transition-all duration-300"
                     >
                       View Details
                     </motion.button>
@@ -1366,7 +1418,7 @@ const ProjectsPage: React.FC = () => {
                 </motion.div>
               ))}
               
-              {/* See More Button */}
+              {/* See More Button - improved for mobile touch */}
               {visibleProperties < filteredAndSortedProperties.length && (
                 <div className="col-span-full flex justify-center my-12">
                   <motion.button
@@ -1375,7 +1427,7 @@ const ProjectsPage: React.FC = () => {
                     whileHover="hover"
                     whileTap="tap"
                     onClick={loadMoreProperties}
-                    className="px-10 py-4 bg-white border border-blue-300 text-blue-600 rounded-xl font-medium shadow-sm hover:shadow-md transition-all duration-300 flex items-center gap-2"
+                    className="px-10 py-4 min-h-[44px] min-w-[200px] bg-white border border-blue-300 text-blue-600 rounded-xl font-medium shadow-sm hover:shadow-md transition-all duration-300 flex items-center justify-center gap-2"
                   >
                     See More Properties
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -1411,7 +1463,7 @@ const ProjectsPage: React.FC = () => {
                   setTypeFilter(null);
                   setSearchQuery('');
                 }}
-                className="px-8 py-3 bg-gradient-to-r from-blue-600 to-blue-400 text-white rounded-full shadow-md"
+                className="px-8 py-3 min-h-[44px] bg-gradient-to-r from-blue-600 to-blue-400 text-white rounded-full shadow-md"
               >
                 Reset All Filters
               </motion.button>

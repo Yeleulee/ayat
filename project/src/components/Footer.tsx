@@ -30,8 +30,8 @@ const Footer = () => {
     }
   };
 
-  // Luxury house background image from Pexels
-  const bgImageUrl = "https://images.pexels.com/photos/2506990/pexels-photo-2506990.jpeg";
+  // Background image URL changed to home-related Unsplash image
+  const bgImageUrl = "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&q=80&w=1920";
 
   return (
     <motion.footer

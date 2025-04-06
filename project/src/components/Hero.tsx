@@ -9,7 +9,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronRight, ChevronLeft, ArrowRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ChevronDown, ArrowRight } from 'lucide-react';
 
 interface HeroProps {
   setCurrentPage: (page: 'home' | 'projects') => void;
@@ -22,6 +22,9 @@ const Hero: React.FC<HeroProps> = ({ setCurrentPage }) => {
   
   // Track slide height for mobile responsiveness
   const [slideHeight, setSlideHeight] = useState('100vh');
+  
+  // Add state for detecting touch devices
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
   
   // Responsive image URLs for different screen sizes
   const slideImages = [
@@ -217,6 +220,11 @@ const Hero: React.FC<HeroProps> = ({ setCurrentPage }) => {
     setLoaded(true);
   }, []);
 
+  // Detect touch devices
+  useEffect(() => {
+    setIsTouchDevice('ontouchstart' in window || navigator.maxTouchPoints > 0);
+  }, []);
+
   const handleNext = () => {
     setCurrentSlide((prevSlide) => (prevSlide + 1) % slideImages.length);
   };
@@ -262,9 +270,19 @@ const Hero: React.FC<HeroProps> = ({ setCurrentPage }) => {
 
   return (
     <div 
-      className="relative w-full overflow-hidden"
+      className="relative h-screen bg-gray-900 overflow-hidden"
       style={{ height: slideHeight }}
     >
+      {/* Hide scrollbar */}
+      <style dangerouslySetInnerHTML={{__html: `
+        html {
+          scrollbar-width: none;
+        }
+        body::-webkit-scrollbar {
+          display: none;
+        }
+      `}} />
+      
       {/* Slide images */}
       <div ref={slidesRef} className="absolute inset-0">
         <AnimatePresence initial={false}>
@@ -279,7 +297,7 @@ const Hero: React.FC<HeroProps> = ({ setCurrentPage }) => {
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-black/20 z-10"></div>
             <img
               src={getResponsiveImageUrl(currentSlide)} 
-              alt={`Real Estate Slide ${currentSlide + 1}`}
+              alt={`Luxury Real Estate Property: ${slideTitles[currentSlide]}`}
               className="w-full h-full object-cover"
               loading={currentSlide === 0 ? "eager" : "lazy"}
               fetchPriority={currentSlide === 0 ? "high" : "auto"}
@@ -324,7 +342,7 @@ const Hero: React.FC<HeroProps> = ({ setCurrentPage }) => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setCurrentPage('projects')}
-                className="px-6 sm:px-8 py-3 bg-white text-black text-sm sm:text-base font-medium rounded-full 
+                className="px-6 sm:px-8 py-4 min-h-[44px] min-w-[120px] bg-white text-black text-sm sm:text-base font-medium rounded-full 
                          hover:bg-white/90 transition-all duration-300 flex items-center justify-center"
               >
                 View Properties <ArrowRight className="ml-2 w-4 h-4" />
@@ -332,7 +350,7 @@ const Hero: React.FC<HeroProps> = ({ setCurrentPage }) => {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="px-6 sm:px-8 py-3 bg-transparent border border-white text-white text-sm sm:text-base font-medium rounded-full 
+                className="px-6 sm:px-8 py-4 min-h-[44px] min-w-[120px] bg-transparent border border-white text-white text-sm sm:text-base font-medium rounded-full 
                          hover:bg-white/10 transition-all duration-300 flex items-center justify-center"
               >
                 Learn More <ArrowRight className="ml-2 w-4 h-4" />
@@ -342,44 +360,71 @@ const Hero: React.FC<HeroProps> = ({ setCurrentPage }) => {
         </AnimatePresence>
       </div>
 
-      {/* Slide navigation with dots for all images */}
+      {/* Slide navigation with dots for all images - Adjusted for better positioning */}
       <div className="absolute bottom-6 sm:bottom-12 left-0 right-0 z-30 flex justify-between items-center px-4 sm:px-6 md:px-12 lg:px-16 max-w-7xl mx-auto">
-        <div className="flex flex-wrap max-w-xs space-x-1 sm:space-x-2">
+        {/* Dot navigation - limited on mobile, scrollable container on desktop */}
+        <div className={`flex flex-wrap ${isTouchDevice ? 'max-w-[45vw] overflow-x-auto pb-2 gap-1 hide-scrollbar' : 'max-w-xs space-x-1 sm:space-x-2'}`}>
           {slideImages.map((_, index) => (
             <button
               key={`dot-${index}`}
-              className={`h-1.5 sm:h-2 rounded-full transition-all duration-300 mb-1 ${
+              className={`h-1.5 sm:h-2 rounded-full transition-all duration-300 mb-1 flex-shrink-0 ${
                 currentSlide === index ? "w-6 sm:w-8 bg-white" : "w-2 sm:w-2.5 bg-white/50"
               }`}
               onClick={() => setCurrentSlide(index)}
               aria-label={`Go to slide ${index + 1}`}
+              style={{ minWidth: currentSlide === index ? '1.5rem' : '0.5rem' }}
             />
           ))}
         </div>
         
+        {/* Navigation buttons - increased size for touch friendliness */}
         <div className="flex space-x-2 sm:space-x-4">
           <motion.button
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             onClick={handlePrev}
-            className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-black/20 backdrop-blur-sm border border-white/20 
+            className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-black/20 backdrop-blur-sm border border-white/20 
                      flex items-center justify-center text-white hover:bg-black/30 transition-colors"
             aria-label="Previous slide"
           >
-            <ChevronLeft className="w-5 h-5" />
+            <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
           </motion.button>
           <motion.button
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             onClick={handleNext}
-            className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-black/20 backdrop-blur-sm border border-white/20 
+            className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-black/20 backdrop-blur-sm border border-white/20 
                      flex items-center justify-center text-white hover:bg-black/30 transition-colors"
             aria-label="Next slide"
           >
-            <ChevronRight className="w-5 h-5" />
+            <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
           </motion.button>
         </div>
       </div>
+
+      {/* Scroll down button with animation and improved tap target */}
+      <motion.button
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1, duration: 0.8 }}
+        whileHover={{ y: 5 }}
+        onClick={() => setCurrentPage('projects')}
+        className="absolute bottom-8 sm:bottom-10 left-1/2 transform -translate-x-1/2 bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white rounded-full p-3 sm:p-4 shadow-lg z-20 min-h-[50px] min-w-[50px] flex items-center justify-center"
+        aria-label="Scroll down to browse properties"
+      >
+        <ChevronDown size={24} strokeWidth={2.5} className="animate-bounce" />
+      </motion.button>
+
+      {/* Add global styles for hiding scrollbars while preserving functionality */}
+      <style dangerouslySetInnerHTML={{__html: `
+        .hide-scrollbar {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+          display: none;
+        }
+      `}} />
     </div>
   );
 };

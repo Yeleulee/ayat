@@ -14,19 +14,19 @@ const Projects = () => {
       title: "Kazanchis Apartments",
       description: "Luxury apartments in central Addis Ababa",
       image: {
-        small: "https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=480",
-        medium: "https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=800",
-        large: "https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg"
+        small: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&q=80&w=480",
+        medium: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&q=80&w=800",
+        large: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&q=80&w=1200"
       }
     },
     {
       id: 2,
-      title: "Commercial Complex",
-      description: "Modern retail and office spaces",
+      title: "Modern Villas",
+      description: "Exclusive family homes with premium amenities",
       image: {
-        small: "https://images.pexels.com/photos/256150/pexels-photo-256150.jpeg?auto=compress&cs=tinysrgb&w=480",
-        medium: "https://images.pexels.com/photos/256150/pexels-photo-256150.jpeg?auto=compress&cs=tinysrgb&w=800",
-        large: "https://images.pexels.com/photos/256150/pexels-photo-256150.jpeg"
+        small: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&q=80&w=480",
+        medium: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&q=80&w=800",
+        large: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&q=80&w=1200"
       }
     },
     {
@@ -34,9 +34,9 @@ const Projects = () => {
       title: "Villa Community",
       description: "Exclusive residential development",
       image: {
-        small: "https://images.pexels.com/photos/1732414/pexels-photo-1732414.jpeg?auto=compress&cs=tinysrgb&w=480",
-        medium: "https://images.pexels.com/photos/1732414/pexels-photo-1732414.jpeg?auto=compress&cs=tinysrgb&w=800",
-        large: "https://images.pexels.com/photos/1732414/pexels-photo-1732414.jpeg"
+        small: "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?auto=format&q=80&w=480",
+        medium: "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?auto=format&q=80&w=800",
+        large: "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?auto=format&q=80&w=1200"
       }
     }
   ];

@@ -1,0 +1,42 @@
+{
+  "name": "Ayat Real Estate",
+  "short_name": "Ayat",
+  "description": "Ethiopia's premier real estate developer",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2563EB",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "48x48 72x72 96x96 128x128 256x256",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "screenshot.jpg",
+      "sizes": "1280x720",
+      "type": "image/jpeg",
+      "form_factor": "wide",
+      "label": "Ayat Real Estate Homepage"
+    },
+    {
+      "src": "screenshot-mobile.jpg",
+      "sizes": "750x1334",
+      "type": "image/jpeg",
+      "form_factor": "narrow",
+      "label": "Ayat Real Estate Mobile View"
+    }
+  ],
+  "orientation": "any",
+  "categories": ["real estate", "business", "lifestyle"],
+  "prefer_related_applications": false
+}
